@@ -22,6 +22,7 @@ PAGES = [
     ("11_settings.png", "http://127.0.0.1:5173/settings"),
     ("12_dashboard_dark.png", "http://127.0.0.1:5173/"),
     ("13_analytics_dark.png", "http://127.0.0.1:5173/analytics"),
+    ("14_upload.png", "http://127.0.0.1:5173/upload"),
 ]
 
 def capture_all():
@@ -35,12 +36,15 @@ def capture_all():
             "--hide-scrollbars",
             "--window-size=1440,900",
             "--virtual-time-budget=3000",
-            f"--screenshot={out_path}",
-            url,
         ]
+        if "_dark" in filename:
+            cmd.append("--force-dark-mode")
+            cmd.append("--blink-settings=forceDarkModeEnabled=true")
+
+        cmd.extend([f"--screenshot={out_path}", url])
         print(f"Capturing {filename} from {url}...")
         try:
-            res = subprocess.run(cmd, capture_output=True, timeout=20)
+            res = subprocess.run(cmd, capture_output=True, timeout=25)
             if out_path.exists():
                 size_kb = out_path.stat().st_size / 1024
                 print(f"  OK: {filename} ({size_kb:.1f} KB)")

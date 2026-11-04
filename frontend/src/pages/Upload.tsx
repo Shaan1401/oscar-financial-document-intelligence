@@ -25,7 +25,7 @@ export const Upload: React.FC = () => {
   const STAGES = [
     'Validating PDF structure & SHA-256 hash',
     'Extracting text layers & table geometry',
-    'Classifying transactions (Non-LLM Hybrid Rules + ML)',
+    'Classifying transactions (Explainable Hybrid Rules + ML)',
     'Calculating financial reconciliation balances',
     'Finalizing persistence & audit trail',
   ];

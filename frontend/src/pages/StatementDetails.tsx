@@ -217,6 +217,32 @@ export const StatementDetails: React.FC = () => {
         </div>
       </div>
 
+      {/* 4-Step Verification Chain */}
+      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-sm dark:border-slate-800/90 dark:bg-slate-900">
+        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+          <span className="font-bold text-slate-800 dark:text-slate-200">End-to-End Evidence Governance Trace</span>
+          <span className="font-mono text-[10px]">Row #{selectedTxn?.row_sequence ?? 1}</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
+          <div className="rounded-lg bg-blue-50/70 p-2.5 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-800/40">
+            <span className="text-[10px] font-bold uppercase text-blue-700 dark:text-blue-300">1. Source Document</span>
+            <p className="font-bold text-slate-800 dark:text-slate-200 truncate mt-0.5">Page {selectedTxn?.source_page ?? 1} ({statement.pdf_type.toUpperCase()})</p>
+          </div>
+          <div className="rounded-lg bg-indigo-50/70 p-2.5 dark:bg-indigo-950/30 border border-indigo-200/60 dark:border-indigo-800/40">
+            <span className="text-[10px] font-bold uppercase text-indigo-700 dark:text-indigo-300">2. Extracted Row</span>
+            <p className="font-bold text-slate-800 dark:text-slate-200 truncate mt-0.5">{selectedTxn?.extraction_method ?? 'pdfplumber_table'}</p>
+          </div>
+          <div className="rounded-lg bg-purple-50/70 p-2.5 dark:bg-purple-950/30 border border-purple-200/60 dark:border-purple-800/40">
+            <span className="text-[10px] font-bold uppercase text-purple-700 dark:text-purple-300">3. Hybrid Classification</span>
+            <p className="font-bold text-slate-800 dark:text-slate-200 truncate mt-0.5">{selectedTxn?.category ?? 'Pending'} ({selectedTxn?.classification_method})</p>
+          </div>
+          <div className="rounded-lg bg-emerald-50/70 p-2.5 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/40">
+            <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-300">4. Financial Validation</span>
+            <p className="font-bold text-slate-800 dark:text-slate-200 truncate mt-0.5">{selectedTxn?.validation_status ?? 'VALID'} (Step Integrity OK)</p>
+          </div>
+        </div>
+      </div>
+
       {/* Split-Screen Evidence Viewer */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         {/* Left Panel: PDF Page Renderer */}

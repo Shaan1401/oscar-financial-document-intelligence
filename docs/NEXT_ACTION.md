@@ -1,15 +1,16 @@
 # OSCAR — Next Actions & Handoff Guide
 
 ## Status Overview
-All agreed core features across Phases 0 through 7 have been fully implemented, enhanced, and verified against the comprehensive project specification and the Evidence-First Financial Intelligence requirements.
+All agreed core features across Phases 0 through 8 have been fully implemented, visually enhanced, and verified against the comprehensive project specification and the Evidence-First Financial Intelligence requirements.
 
 - **Automated Tests**: 36/36 passing in pytest (`test_vertical_slice.py`, `test_multi_layout_and_ocr.py`, `test_classification.py`, `test_financial_engineering.py`, `test_statement_details.py`, `test_analytics.py`).
 - **Frontend**: 12 pages in React 19 + TypeScript + Tailwind CSS; production build passing (`tsc -b && vite build` exits with code 0).
-- **Workbench & Evidence Viewer**: Evidence-First Workbench with Financial Integrity Bridge, Processing Journey, Cash Flow ComposedChart, Running Balance AreaChart, Spending Distribution, and Daily Heatmap. Interactive split-screen Evidence Viewer with exact PyMuPDF preview, table-row bounding-box highlight overlay, and deep Traceability & Evidence Inspector card.
+- **Brand Identity**: Full OSCAR acronym decomposition (`Operational Statement Classification, Analysis & Reconciliation`) visibly embedded in Dashboard Hero, Sidebar, Settings About card, and documentation.
+- **Workbench & Evidence Viewer**: Evidence-First Workbench with Financial Integrity Bridge, Processing Journey, Cash Flow ComposedChart, Running Balance AreaChart, Spending Distribution, and Daily Heatmap. Interactive split-screen Evidence Viewer with exact PyMuPDF preview, table-row bounding-box highlight overlay, 4-step governance trace, and deep Traceability & Evidence Inspector card.
 - **Analytics API**: 8 specialized database-backed aggregation endpoints (running balance, activity heatmap, merchant Pareto concentration, payment channels, confidence bins, field completeness, currency-partitioned multi-statement comparison, and chronological category trends).
-- **Screenshots**: 13 genuine screenshots captured in `screenshots/` covering all key views and light/dark modes.
+- **Screenshots**: 14 genuine screenshots captured in `screenshots/` covering all key views and light/dark modes.
 - **Database & Seeding**: Automated script `scripts/seed_demo_data.py` available to populate, reprocess, and reconcile all demonstration layouts with exact bounding box geometry.
-- **Documentation**: Comprehensive `README.md`, `docs/PROJECT_SPEC.md`, `docs/DECISIONS.md`, `docs/CURRENT_STATUS.md`, and `docs/TEST_RESULTS.md`.
+- **Documentation**: Comprehensive `README.md`, `docs/REVIEWER_GUIDE.md`, `docs/SUBMISSION_CHECKLIST.md`, `docs/PROJECT_SPEC.md`, `docs/DECISIONS.md`, `docs/CURRENT_STATUS.md`, and `docs/TEST_RESULTS.md`.
 
 ---
 

@@ -65,10 +65,10 @@ export const ClassificationInsights: React.FC = () => {
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Classification Insights
+            Classification Insights &amp; Methodology
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Strictly Non-LLM Architecture: Word & Character TF-IDF Logistic Regression & Rule Heuristics.
+            Explainable Hybrid Classification: Word &amp; Character TF-IDF Logistic Regression &amp; Curated Banking Rules.
           </p>
         </div>
         <button
@@ -81,18 +81,18 @@ export const ClassificationInsights: React.FC = () => {
         </button>
       </div>
 
-      {/* Non-LLM Architecture Guarantee Banner */}
+      {/* Explainable Hybrid Classification Guarantee Banner */}
       <div className="rounded-xl border border-brand-200 bg-brand-50/60 p-5 dark:border-brand-900/60 dark:bg-brand-950/30">
         <div className="flex items-start space-x-3">
           <ShieldCheck className="h-6 w-6 text-brand-600 dark:text-brand-400 shrink-0 mt-0.5" />
           <div className="space-y-1 text-xs">
             <h3 className="font-bold text-slate-900 dark:text-white">
-              Deterministic, Local & Non-LLM Architecture
+              Explainable Hybrid Classification Architecture (Offline &amp; Deterministic)
             </h3>
             <p className="text-slate-600 dark:text-slate-300">
-              In strict accordance with the assessment specifications, OSCAR employs <strong>zero Large Language Models</strong>,
-              no OpenAI/Claude/Gemini APIs, and no cloud vector embeddings. Classification runs 100% locally using an explainable,
-              two-tiered hybrid pipeline: <strong>Tier 1 Curated Banking Rules</strong> with conflict detection, and <strong>Tier 2 Word & Character TF-IDF FeatureUnion with Multinomial Logistic Regression</strong>.
+              In strict accordance with the financial assessment specifications, OSCAR operates with <strong>zero external cloud LLM dependencies</strong>,
+              preventing customer data leaks and non-deterministic hallucination. Classification executes 100% locally using an explainable,
+              two-tiered hybrid engine: <strong>Tier 1 Curated Banking Rules</strong> with automatic conflict detection, and <strong>Tier 2 Dual Word &amp; Character TF-IDF FeatureUnion with Multinomial Logistic Regression</strong>.
             </p>
           </div>
         </div>

@@ -1,19 +1,32 @@
 # OSCAR — Operational Statement Classification, Analysis & Reconciliation
+### Financial Document Intelligence Workstation
 
 [![Python 3.11](https://img.shields.io/badge/Python-3.11.15-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19.3+-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4+-38B2AC.svg)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-25%2F25%20Passing-brightgreen.svg)](https://github.com/shaanraval/oscar-bank-statement-intelligence)
-[![Strict Non-LLM](https://img.shields.io/badge/Classification-Strict%20Non--LLM-orange.svg)](docs/DECISIONS.md)
+[![Tests](https://img.shields.io/badge/Tests-36%2F36%20Passing-brightgreen.svg)](https://github.com/shaanraval/oscar-bank-statement-intelligence)
+[![Explainable Non-LLM](https://img.shields.io/badge/Classification-Explainable%20Hybrid%20Non--LLM-blue.svg)](docs/DECISIONS.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> *"Every transaction deserves an explanation."*
+> **Full Form:** **O**perational **S**tatement **C**lassification, **A**nalysis &amp; **R**econciliation  
+> **Product Descriptor:** Financial Document Intelligence  
+> **Official Tagline:** *"Every transaction deserves an explanation."*
 
-**OSCAR** is an enterprise-grade, local-first financial document intelligence platform engineered for automated bank statement processing, explainable heuristic and traditional machine learning classification, mathematical ledger reconciliation, and human-in-the-loop review.
+| Letter | Module | Workstation Capability |
+|:---:|:---|:---|
+| **O** | **Operational** | Precision accounting ledger, minor-unit integer arithmetic, and immutable audit trails |
+| **S** | **Statement** | Multi-bank layout parsing (Layouts A, B, C, digital text and scanned OCR) |
+| **C** | **Classification** | Explainable hybrid engine (deterministic rules + dual word/char TF-IDF Logistic Regression) |
+| **A** | **Analysis** | Deep analytics suite (Pareto merchant concentration, payment channels, cashflow intelligence) |
+| **R** | **Reconciliation** | Mathematical integrity bridge ($\text{Opening} + \Delta = \text{Closing}$) with verified zero variance |
 
-Engineered for the **Befree AI & Automation Internship Assessment**, OSCAR complies with the **Strict Non-LLM Mandate**: all transaction categorizations are performed deterministically via curated financial heuristics and an offline-trained scikit-learn pipeline (word + character n-gram TF-IDF and Logistic Regression / LinearSVC). No client financial data ever leaves the local workstation.
+---
+
+**OSCAR** is an enterprise-grade, local-first financial document intelligence workstation engineered for automated bank statement processing, explainable heuristic and traditional machine learning classification, mathematical ledger reconciliation, and human-in-the-loop review.
+
+Engineered for the **Befree AI & Automation Assessment**, OSCAR complies with the **Strict Non-LLM Mandate**: all transaction categorizations are performed deterministically via curated financial heuristics and an offline-trained scikit-learn pipeline (word + character n-gram TF-IDF and Logistic Regression / LinearSVC). No client financial data ever leaves the local workstation.
 
 ---
 
@@ -184,9 +197,10 @@ All screenshots below are captured from the live OSCAR application running with 
 | **Statement History** | ![Statement History](screenshots/08_statement_history.png) |
 | **Export Centre (Excel / CSV)** | ![Export Centre](screenshots/09_export_centre.png) |
 | **Immutable Audit Trail** | ![Audit Trail](screenshots/10_audit_trail.png) |
-| **Settings & Diagnostics** | ![Settings](screenshots/11_settings.png) |
+| **Settings & About OSCAR Specifications** | ![Settings](screenshots/11_settings.png) |
 | **Executive Dashboard (Dark Theme)** | ![Dashboard Dark](screenshots/12_dashboard_dark.png) |
 | **Financial Analytics (Dark Theme)** | ![Analytics Dark](screenshots/13_analytics_dark.png) |
+| **Upload & Processing Center** | ![Upload](screenshots/14_upload.png) |
 
 ---
 
