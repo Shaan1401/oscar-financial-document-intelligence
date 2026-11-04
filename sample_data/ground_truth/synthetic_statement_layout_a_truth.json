@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "bank_name": "OSCAR Demonstration Bank",
+    "account_holder": "Rajesh Kumar Sharma",
+    "account_number": "50100234891234",
+    "ifsc_code": "OSCB0001234",
+    "branch": "Connaught Place, New Delhi",
+    "statement_period": "01/10/2026 to 15/10/2026",
+    "opening_balance": 45000.0,
+    "closing_balance": 82631.5,
+    "total_debits": 49267.5,
+    "total_credits": 86899.0,
+    "transaction_count": 15,
+    "layout": "Layout A - Standard Separate Debit/Credit"
+  },
+  "transactions": [
+    {
+      "sequence": 1,
+      "date": "01/10/2026",
+      "description": "SALARY CREDIT - ACME TECH LABS PVT LTD",
+      "debit": 0.0,
+      "credit": 85000.0,
+      "balance": 130000.0
+    },
+    {
+      "sequence": 2,
+      "date": "02/10/2026",
+      "description": "UPI/ZOMATO/ORDER-78932/FOOD",
+      "debit": 480.0,
+      "credit": 0.0,
+      "balance": 129520.0
+    },
+    {
+      "sequence": 3,
+      "date": "03/10/2026",
+      "description": "SWIGGY BANGALORE IN/REST",
+      "debit": 650.0,
+      "credit": 0.0,
+      "balance": 128870.0
+    },
+    {
+      "sequence": 4,
+      "date": "04/10/2026",
+      "description": "DMART SUPERMARKET RETAIL STORE",
+      "debit": 3420.5,
+      "credit": 0.0,
+      "balance": 125449.5
+    },
+    {
+      "sequence": 5,
+      "date": "05/10/2026",
+      "description": "AMAZON PAY INDIA E-COMMERCE",
+      "debit": 1899.0,
+      "credit": 0.0,
+      "balance": 123550.5
+    },
+    {
+      "sequence": 6,
+      "date": "06/10/2026",
+      "description": "UBER INDIA RIDES PVT LTD TRIP",
+      "debit": 340.0,
+      "credit": 0.0,
+      "balance": 123210.5
+    },
+    {
+      "sequence": 7,
+      "date": "07/10/2026",
+      "description": "HPCL FUEL STATION PETROL PUMP",
+      "debit": 2000.0,
+      "credit": 0.0,
+      "balance": 121210.5
+    },
+    {
+      "sequence": 8,
+      "date": "08/10/2026",
+      "description": "BESCOM ELECTRICITY BILL PAYMENT",
+      "debit": 1450.0,
+      "credit": 0.0,
+      "balance": 119760.5
+    },
+    {
+      "sequence": 9,
+      "date": "09/10/2026",
+      "description": "APOLLO PHARMACY HEALTHCARE",
+      "debit": 820.0,
+      "credit": 0.0,
+      "balance": 118940.5
+    },
+    {
+      "sequence": 10,
+      "date": "10/10/2026",
+      "description": "ATM CASH WDL HDFC ATM CONNAUGHT",
+      "debit": 5000.0,
+      "credit": 0.0,
+      "balance": 113940.5
+    },
+    {
+      "sequence": 11,
+      "date": "11/10/2026",
+      "description": "NETFLIX ENTERTAINMENT SUBSCRIPTION",
+      "debit": 649.0,
+      "credit": 0.0,
+      "balance": 113291.5
+    },
+    {
+      "sequence": 12,
+      "date": "12/10/2026",
+      "description": "ANNUAL SMS ALERT BANK CHARGES",
+      "debit": 59.0,
+      "credit": 0.0,
+      "balance": 113232.5
+    },
+    {
+      "sequence": 13,
+      "date": "13/10/2026",
+      "description": "REFUND AMAZON PAY FAILED ORDER",
+      "debit": 0.0,
+      "credit": 1899.0,
+      "balance": 115131.5
+    },
+    {
+      "sequence": 14,
+      "date": "14/10/2026",
+      "description": "IMPS/P2A/TRANSFER TO SISTER A/C",
+      "debit": 10000.0,
+      "credit": 0.0,
+      "balance": 105131.5
+    },
+    {
+      "sequence": 15,
+      "date": "15/10/2026",
+      "description": "HDFC HOME LOAN AUTO DEBIT EMI",
+      "debit": 22500.0,
+      "credit": 0.0,
+      "balance": 82631.5
+    }
+  ]
+}
