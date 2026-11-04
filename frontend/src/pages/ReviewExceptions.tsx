@@ -79,34 +79,34 @@ export const ReviewExceptions: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Review & Exceptions Centre
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-[#F4F1E9]">
+          Review &amp; Exceptions Centre
         </h1>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+        <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-1">
           Audit flagged transactions, resolve confidence warnings, and apply explainable human corrections.
         </p>
       </div>
 
       {/* Queue Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-        <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-800 flex items-center justify-between">
+      <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
+        <div className="border-b border-slate-100 px-5 py-3.5 dark:border-navy-800 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertCircle className="h-4 w-4 text-amber-500" />
-            <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+            <span className="text-sm font-semibold text-slate-900 dark:text-[#F4F1E9]">
               Pending Exceptions ({items.length})
             </span>
           </div>
-          <span className="text-[11px] text-slate-400">
+          <span className="text-xs text-slate-500 dark:text-[#9BA8BA]">
             Transactions with rule conflicts, low ML confidence, or anomaly indicators
           </span>
         </div>
 
         {loading ? (
           <div className="flex h-64 items-center justify-center">
-            <div className="h-7 w-7 animate-spin rounded-full border-4 border-brand-600 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold-500 border-t-transparent" />
           </div>
         ) : items.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">
+          <div className="p-12 text-center text-sm text-slate-500 dark:text-slate-400">
             <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-500 mb-2" />
             <p className="font-semibold text-slate-800 dark:text-slate-200">All exceptions resolved!</p>
             <p className="mt-0.5">There are currently no transactions requiring human review.</p>
@@ -114,46 +114,46 @@ export const ReviewExceptions: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[820px]">
-              <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
+              <thead className="bg-slate-50 text-slate-500 dark:bg-navy-800/60 dark:text-[#9BA8BA]">
                 <tr>
-                  <th className="px-4 py-3 font-semibold min-w-[200px]">Date &amp; Description</th>
-                  <th className="px-4 py-3 font-semibold min-w-[240px]">Flag / Reason</th>
-                  <th className="px-4 py-3 font-semibold text-right">Amount</th>
-                  <th className="px-4 py-3 font-semibold">Assigned Category</th>
-                  <th className="px-4 py-3 font-semibold">Method / Score</th>
-                  <th className="px-4 py-3 font-semibold text-right">Actions</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs min-w-[200px]">Date &amp; Description</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs min-w-[240px]">Flag / Reason</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs text-right">Amount</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs">Assigned Category</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs">Method / Score</th>
+                  <th className="px-4 py-3 font-semibold uppercase tracking-wider text-xs text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
                 {items.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-navy-800/40">
                     <td className="px-4 py-3 min-w-[200px] max-w-[300px]">
-                      <span className="font-mono text-slate-400 block text-[11px]">{t.date}</span>
-                      <p className="font-medium text-slate-900 dark:text-white mt-0.5 break-words whitespace-normal leading-snug">{t.description}</p>
+                      <span className="text-slate-400 dark:text-[#9BA8BA] block text-xs">{t.date}</span>
+                      <p className="font-medium text-sm text-slate-900 dark:text-[#F4F1E9] mt-0.5 break-words whitespace-normal leading-snug">{t.description}</p>
                     </td>
                     <td className="px-4 py-3 min-w-[240px] max-w-[360px]">
-                      <div className="inline-block rounded-md bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-800 border border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/80 leading-relaxed break-words whitespace-normal">
+                      <div className="inline-block rounded-md bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800 border border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/80 leading-relaxed break-words whitespace-normal">
                         {t.validation_warnings || t.classification_reason || 'Human review flagged'}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right font-mono">
+                    <td className="px-4 py-3 text-right tabular-nums text-sm font-semibold">
                       {t.debit > 0 ? (
-                        <span className="text-rose-600">- ₹ {t.debit.toFixed(2)}</span>
+                        <span className="text-rose-600 dark:text-rose-400">- ₹ {t.debit.toFixed(2)}</span>
                       ) : (
-                        <span className="text-emerald-600">+ ₹ {t.credit.toFixed(2)}</span>
+                        <span className="text-emerald-600 dark:text-emerald-400">+ ₹ {t.credit.toFixed(2)}</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                      <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 dark:bg-navy-800 dark:text-slate-300">
                         {t.category}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-slate-700 dark:text-slate-300">
+                    <td className="px-4 py-3 text-xs">
+                      <span className="font-medium text-slate-700 dark:text-[#9BA8BA]">
                         {t.classification_method}
                       </span>
                       {t.confidence_score && (
-                        <span className="text-slate-400 ml-1 font-mono">
+                        <span className="text-slate-400 ml-1 tabular-nums font-semibold">
                           ({(t.confidence_score * 100).toFixed(0)}%)
                         </span>
                       )}
@@ -162,15 +162,17 @@ export const ReviewExceptions: React.FC = () => {
                       <div className="flex items-center justify-end space-x-2">
                         <button
                           onClick={() => handleApprove(t.id)}
-                          className="rounded bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300"
+                          className="inline-flex items-center space-x-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer"
                         >
-                          Approve
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          <span>Approve</span>
                         </button>
                         <button
                           onClick={() => openCorrectModal(t)}
-                          className="rounded bg-brand-50 px-2.5 py-1 text-[11px] font-semibold text-brand-700 hover:bg-brand-100 dark:bg-brand-950/50 dark:text-brand-300"
+                          className="inline-flex items-center space-x-1 rounded-lg bg-navy-900 hover:bg-navy-800 text-gold-400 border border-gold-500/40 px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer dark:bg-navy-800 dark:hover:bg-navy-700"
                         >
-                          Correct
+                          <Edit3 className="h-3.5 w-3.5" />
+                          <span>Correct</span>
                         </button>
                       </div>
                     </td>

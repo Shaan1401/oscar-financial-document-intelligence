@@ -98,71 +98,71 @@ export const FinancialAnalytics: React.FC = () => {
 
       {/* Top 3 KPI Summary Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Gross Portfolio Inflow</span>
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+            <span className="text-xs font-semibold uppercase tracking-wider">Gross Portfolio Inflow</span>
             <TrendingUp className="h-4 w-4 text-emerald-500" />
           </div>
-          <p className="mt-2 text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
+          <p className="mt-2 text-2xl font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
             ₹ {(summary?.total_credits ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </p>
-          <span className="text-[10px] text-slate-400 mt-1 block">Deposits, payroll & inward remittances</span>
+          <span className="text-xs text-slate-400 dark:text-[#9BA8BA] mt-1 block">Deposits, payroll &amp; inward remittances</span>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Gross Portfolio Outflow</span>
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+            <span className="text-xs font-semibold uppercase tracking-wider">Gross Portfolio Outflow</span>
             <TrendingDown className="h-4 w-4 text-rose-500" />
           </div>
-          <p className="mt-2 text-2xl font-bold font-mono text-rose-600 dark:text-rose-400">
+          <p className="mt-2 text-2xl font-bold tabular-nums text-rose-600 dark:text-rose-400">
             ₹ {(summary?.total_debits ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </p>
-          <span className="text-[10px] text-slate-400 mt-1 block">Operational expenses, EMIs & merchant debits</span>
+          <span className="text-xs text-slate-400 dark:text-[#9BA8BA] mt-1 block">Operational expenses, EMIs &amp; merchant debits</span>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-slate-500">Net Treasury Movement</span>
-            <Scale className="h-4 w-4 text-brand-500" />
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+            <span className="text-xs font-semibold uppercase tracking-wider">Net Treasury Movement</span>
+            <Scale className="h-4 w-4 text-gold-500" />
           </div>
-          <p className={`mt-2 text-2xl font-bold font-mono ${
+          <p className={`mt-2 text-2xl font-bold tabular-nums ${
             (summary?.net_movement ?? 0) >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
           }`}>
             ₹ {(summary?.net_movement ?? 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </p>
-          <span className="text-[10px] text-slate-400 mt-1 block">Net liquidity change across active statements</span>
+          <span className="text-xs text-slate-400 dark:text-[#9BA8BA] mt-1 block">Net liquidity change across active statements</span>
         </div>
       </div>
 
       {/* Row 1: Merchant Concentration / Pareto & Payment Channels */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* MERCHANT CONCENTRATION / PARETO ANALYSIS */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-1.5">
-                <Building2 className="h-4 w-4 text-brand-600" />
-                <span>Merchant Concentration & Pareto Curve</span>
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9] flex items-center space-x-2">
+                <Building2 className="h-4 w-4 text-gold-500" />
+                <span>Merchant Concentration &amp; Pareto Curve</span>
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Top merchant entities by spend and cumulative share (% Pareto).
               </p>
             </div>
-            <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
+            <span className="text-sm font-semibold tabular-nums text-slate-800 dark:text-[#F4F1E9]">
               ₹ {merchants?.total_tracked_spending.toLocaleString('en-IN') ?? 0}
             </span>
           </div>
 
           <div className="mt-4 h-64 w-full">
             {!merchants || merchants.top_merchants.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-xs text-slate-400">No merchant records identified</div>
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">No merchant records identified</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={merchants.top_merchants} margin={{ top: 10, right: 35, left: 15, bottom: 35 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                  <XAxis dataKey="merchant" tick={{ fontSize: 10, fill: '#94A3B8' }} interval={0} angle={-15} textAnchor="end" height={45} />
-                  <YAxis yAxisId="left" tick={{ fontSize: 10, fill: '#94A3B8' }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: '#94A3B8' }} domain={[0, 100]} unit="%" />
+                  <XAxis dataKey="merchant" tick={{ fontSize: 11, fill: '#94A3B8' }} interval={0} angle={-15} textAnchor="end" height={45} />
+                  <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: '#94A3B8' }} domain={[0, 100]} unit="%" />
                   <Tooltip
                     formatter={(val: any, name: any) => [
                       name === 'cumulative_percentage' ? `${val}%` : `₹ ${Number(val).toLocaleString('en-IN')}`,
@@ -179,29 +179,29 @@ export const FinancialAnalytics: React.FC = () => {
         </div>
 
         {/* PAYMENT CHANNEL BREAKDOWN */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-1.5">
-                <CreditCard className="h-4 w-4 text-brand-600" />
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9] flex items-center space-x-2">
+                <CreditCard className="h-4 w-4 text-gold-500" />
                 <span>Payment Channel Velocity</span>
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Recognized rail volume (UPI, NEFT, IMPS, ATM, POS, NACH).
               </p>
             </div>
-            <span className="text-xs font-semibold text-slate-500">{channels.length} Rails Detected</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-[#9BA8BA]">{channels.length} Rails Detected</span>
           </div>
 
           <div className="mt-4 h-64 w-full">
             {channels.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-xs text-slate-400">No payment channels classified</div>
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">No payment channels classified</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={channels} layout="vertical" margin={{ top: 10, right: 30, left: 15, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.3} />
-                  <XAxis type="number" tick={{ fontSize: 10, fill: '#94A3B8' }} />
-                  <YAxis type="category" dataKey="channel" tick={{ fontSize: 10, fill: '#94A3B8' }} width={110} />
+                  <XAxis type="number" tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                  <YAxis type="category" dataKey="channel" tick={{ fontSize: 11, fill: '#94A3B8' }} width={110} />
                   <Tooltip
                     formatter={(val: any) => [`₹ ${Number(val).toLocaleString('en-IN')}`, 'Channel Volume']}
                     contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #1e293b', color: '#fff', fontSize: '11px' }}
@@ -217,28 +217,28 @@ export const FinancialAnalytics: React.FC = () => {
       {/* Row 2: Category Timeline Trends & Classification Intelligence */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* CATEGORY TREND ANALYSIS */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Category Spending Trends Over Time
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9] flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-gold-500" />
+                <span>Category Spending Trends Over Time</span>
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Daily expenditure velocity across leading expense categories.
               </p>
             </div>
-            <Calendar className="h-4 w-4 text-slate-400" />
           </div>
 
           <div className="mt-4 h-64 w-full">
             {trends.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-xs text-slate-400">No trend history available</div>
+              <div className="flex h-full items-center justify-center text-sm text-slate-400">No trend history available</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trends} margin={{ top: 10, right: 30, left: 15, bottom: 15 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#94A3B8' }} />
-                  <YAxis tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#94A3B8' }} />
+                  <YAxis tick={{ fontSize: 11, fill: '#94A3B8' }} />
                   <Tooltip
                     formatter={(val: any, name: any) => [`₹ ${Number(val).toLocaleString('en-IN')}`, String(name)]}
                     contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #1e293b', color: '#fff', fontSize: '11px' }}
@@ -255,14 +255,14 @@ export const FinancialAnalytics: React.FC = () => {
         </div>
 
         {/* CLASSIFICATION INTELLIGENCE & CONFIDENCE BINS */}
-        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center space-x-1.5">
-                <Cpu className="h-4 w-4 text-brand-600" />
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9] flex items-center space-x-2">
+                <Cpu className="h-4 w-4 text-gold-500" />
                 <span>Explainable Hybrid Classification Distribution</span>
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Rule engine vs traditional TF-IDF Logistic Regression confidence distribution.
               </p>
             </div>
@@ -325,22 +325,22 @@ export const FinancialAnalytics: React.FC = () => {
       {/* Row 3: Extraction Completeness & Multi-Statement Comparison */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* EXTRACTION COMPLETENESS METRICS */}
-        <div className="lg:col-span-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="lg:col-span-4 rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9]">
                 Field Completeness Audit
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Availability of extracted fields across all rows.
               </p>
             </div>
-            <span className="font-mono text-xs font-bold text-emerald-600">
+            <span className="text-sm font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
               {completeness?.overall_completeness_pct ?? 100}%
             </span>
           </div>
 
-          <div className="mt-4 space-y-3 text-xs">
+          <div className="mt-4 space-y-3 text-sm">
             {[
               { label: 'Date Completeness', val: completeness?.date_completeness_pct ?? 100 },
               { label: 'Description Completeness', val: completeness?.description_completeness_pct ?? 100 },
@@ -349,11 +349,11 @@ export const FinancialAnalytics: React.FC = () => {
               { label: 'Page / Coordinate Traceability', val: completeness?.coordinates_completeness_pct ?? 100 },
             ].map((f) => (
               <div key={f.label} className="space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">{f.label}</span>
-                  <span className="font-mono font-semibold text-slate-900 dark:text-white">{f.val}%</span>
+                <div className="flex justify-between text-xs">
+                  <span className="text-slate-600 dark:text-[#9BA8BA]">{f.label}</span>
+                  <span className="font-semibold tabular-nums text-slate-900 dark:text-[#F4F1E9]">{f.val}%</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-slate-100 dark:bg-navy-800 overflow-hidden">
                   <div
                     className="h-full rounded-full bg-emerald-500"
                     style={{ width: `${f.val}%` }}
@@ -365,17 +365,17 @@ export const FinancialAnalytics: React.FC = () => {
         </div>
 
         {/* MULTI-STATEMENT COMPARISON (Strictly Partitioned by Currency) */}
-        <div className="lg:col-span-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="lg:col-span-8 rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-navy-800">
             <div>
-              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-[#F4F1E9]">
                 Multi-Statement Comparative Ledger
               </h3>
-              <p className="text-[11px] text-slate-500 mt-0.5">
+              <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-0.5">
                 Financial comparison grouped strictly by currency (Zero currency mixing).
               </p>
             </div>
-            <span className="text-xs font-mono rounded bg-slate-100 px-2 py-0.5 font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            <span className="text-xs rounded bg-slate-100 px-2.5 py-1 font-semibold text-slate-700 dark:bg-navy-800 dark:text-slate-300">
               Currency: INR (₹)
             </span>
           </div>

@@ -114,6 +114,7 @@ export interface ReconciliationResult {
   running_balance_errors: number;
   duplicate_count: number;
   exceptions: string[];
+  recalculated_at?: string;
 }
 
 export interface AuditEventItem {

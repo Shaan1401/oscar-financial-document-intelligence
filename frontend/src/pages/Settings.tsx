@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
+import { OscarLogo } from '../components/Common/OscarLogo';
 
 export const Settings: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -47,9 +48,7 @@ export const Settings: React.FC = () => {
       <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm dark:border-slate-800/90 dark:bg-slate-900 space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center space-x-3.5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-white font-black text-2xl shadow-sm ring-2 ring-brand-500/30">
-              O
-            </div>
+            <OscarLogo size={46} className="shrink-0" />
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-white">

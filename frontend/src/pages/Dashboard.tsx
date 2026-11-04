@@ -180,17 +180,17 @@ export const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* KPI 1: Total Inflows */}
             <div className="oscar-card flex flex-col justify-between">
-              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#9BA8BA]">
-                <span className="font-semibold uppercase tracking-wider text-[11px]">Total Inflows</span>
+              <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+                <span className="text-xs font-semibold uppercase tracking-wider">Total Inflows</span>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
                   <ArrowDownRight className="h-4 w-4" />
                 </span>
               </div>
               <div className="mt-3">
-                <span className="font-mono text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                   ₹ {totalInflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <p className="mt-1 text-[11px] text-slate-500 dark:text-[#9BA8BA]">
+                <p className="mt-1 text-xs text-slate-500 dark:text-[#9BA8BA]">
                   Verified credits into account
                 </p>
               </div>
@@ -198,17 +198,17 @@ export const Dashboard: React.FC = () => {
 
             {/* KPI 2: Total Outflows */}
             <div className="oscar-card flex flex-col justify-between">
-              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#9BA8BA]">
-                <span className="font-semibold uppercase tracking-wider text-[11px]">Total Outflows</span>
+              <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+                <span className="text-xs font-semibold uppercase tracking-wider">Total Outflows</span>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500">
                   <ArrowUpRight className="h-4 w-4" />
                 </span>
               </div>
               <div className="mt-3">
-                <span className="font-mono text-2xl font-bold text-rose-600 dark:text-rose-400 tabular-nums">
+                <span className="text-2xl font-bold text-rose-600 dark:text-rose-400 tabular-nums">
                   ₹ {totalOutflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <p className="mt-1 text-[11px] text-slate-500 dark:text-[#9BA8BA]">
+                <p className="mt-1 text-xs text-slate-500 dark:text-[#9BA8BA]">
                   Verified debits &amp; expenditures
                 </p>
               </div>
@@ -216,8 +216,8 @@ export const Dashboard: React.FC = () => {
 
             {/* KPI 3: Net Cash Movement */}
             <div className="oscar-card flex flex-col justify-between">
-              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#9BA8BA]">
-                <span className="font-semibold uppercase tracking-wider text-[11px]">Net Cash Movement</span>
+              <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+                <span className="text-xs font-semibold uppercase tracking-wider">Net Cash Movement</span>
                 <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${
                   netCashMovement >= 0 ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'
                 }`}>
@@ -225,12 +225,12 @@ export const Dashboard: React.FC = () => {
                 </span>
               </div>
               <div className="mt-3">
-                <span className={`font-mono text-2xl font-bold tabular-nums ${
+                <span className={`text-2xl font-bold tabular-nums ${
                   netCashMovement >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                 }`}>
                   {netCashMovement >= 0 ? '+ ' : '- '}₹ {Math.abs(netCashMovement).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <p className="mt-1 text-[11px] text-slate-500 dark:text-[#9BA8BA]">
+                <p className="mt-1 text-xs text-slate-500 dark:text-[#9BA8BA]">
                   {netCashMovement >= 0 ? 'Positive net liquidity surplus' : 'Net liquidity deficit'}
                 </p>
               </div>
@@ -238,17 +238,17 @@ export const Dashboard: React.FC = () => {
 
             {/* KPI 4: Closing Balance */}
             <div className="oscar-card flex flex-col justify-between">
-              <div className="flex items-center justify-between text-xs text-slate-500 dark:text-[#9BA8BA]">
-                <span className="font-semibold uppercase tracking-wider text-[11px]">Closing Balance</span>
+              <div className="flex items-center justify-between text-slate-500 dark:text-[#9BA8BA]">
+                <span className="text-xs font-semibold uppercase tracking-wider">Closing Balance</span>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold-400/15 text-gold-500">
                   <Wallet className="h-4 w-4" />
                 </span>
               </div>
               <div className="mt-3">
-                <span className="font-mono text-2xl font-bold text-slate-900 dark:text-[#F4F1E9] tabular-nums">
+                <span className="text-2xl font-bold text-slate-900 dark:text-[#F4F1E9] tabular-nums">
                   ₹ {closingBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-                <div className="mt-1 flex items-center justify-between text-[11px]">
+                <div className="mt-1 flex items-center justify-between text-xs">
                   <span className="text-slate-500 dark:text-[#9BA8BA]">Final ledger balance</span>
                   <span className={`font-bold ${isBridgeReconciled ? 'text-emerald-500' : 'text-amber-500'}`}>
                     {isBridgeReconciled ? 'Reconciled' : 'Variance'}
@@ -264,22 +264,22 @@ export const Dashboard: React.FC = () => {
           <div className="oscar-card">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-slate-100 dark:border-navy-800 gap-2">
               <div>
-                <h2 className="text-xs font-bold text-slate-900 dark:text-[#F4F1E9] uppercase tracking-wider flex items-center space-x-2">
-                  <Scale className="h-4 w-4 text-gold-500" />
+                <h2 className="text-base font-bold text-slate-900 dark:text-[#F4F1E9] flex items-center space-x-2">
+                  <Scale className="h-5 w-5 text-gold-500" />
                   <span>Financial Integrity Bridge (Reconciliation Equation Proof)</span>
                 </h2>
-                <p className="text-[11px] text-slate-500 dark:text-[#9BA8BA] mt-0.5">
+                <p className="text-sm text-slate-500 dark:text-[#9BA8BA] mt-1">
                   Opening Balance + Capital Inflows (Credits) - Capital Outflows (Debits) = Expected vs Extracted Closing Balance.
                 </p>
               </div>
 
               <div className="flex items-center space-x-2">
-                <span className={`inline-flex items-center space-x-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                <span className={`inline-flex items-center space-x-1.5 rounded-full px-3 py-1 text-xs font-bold ${
                   isBridgeReconciled
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
                     : 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
                 }`}>
-                  <CheckCircle2 className="h-3 w-3" />
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                   <span>{isBridgeReconciled ? 'Reconciled (₹0.00 Variance)' : `Mismatch (₹${balanceVariance.toFixed(2)})`}</span>
                 </span>
 
@@ -297,50 +297,50 @@ export const Dashboard: React.FC = () => {
 
             {/* Mathematical Flow Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4 text-center">
-              <div className="rounded-lg bg-slate-50 p-3.5 dark:bg-navy-800/80 border border-slate-200/60 dark:border-navy-700/60">
-                <span className="text-[10px] font-bold text-slate-500 dark:text-[#9BA8BA] uppercase tracking-wider">Opening Balance</span>
-                <p className="mt-1 font-mono text-base font-bold text-slate-900 dark:text-[#F4F1E9] tabular-nums">
+              <div className="rounded-lg bg-slate-50 p-3.5 dark:bg-navy-800/80 border border-slate-200/60 dark:border-navy-700/60 flex flex-col justify-between">
+                <span className="text-xs font-semibold text-slate-500 dark:text-[#9BA8BA] uppercase tracking-wider">Opening Balance</span>
+                <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-[#F4F1E9] tabular-nums">
                   ₹ {openingBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] text-slate-400 dark:text-[#9BA8BA] font-mono">Baseline Ledger</span>
+                <span className="text-xs text-slate-400 dark:text-[#9BA8BA]">Baseline Ledger</span>
               </div>
 
-              <div className="rounded-lg bg-emerald-50/70 p-3.5 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-800/50">
-                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">+ Capital Inflows</span>
-                <p className="mt-1 font-mono text-base font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+              <div className="rounded-lg bg-emerald-50/70 p-3.5 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-800/50 flex flex-col justify-between">
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">+ Capital Inflows</span>
+                <p className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
                   + ₹ {totalInflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 font-mono">Total Verified Credits</span>
+                <span className="text-xs text-emerald-600/80 dark:text-emerald-400/80">Total Verified Credits</span>
               </div>
 
-              <div className="rounded-lg bg-rose-50/70 p-3.5 dark:bg-rose-950/30 border border-rose-200/70 dark:border-rose-800/50">
-                <span className="text-[10px] font-bold text-rose-700 dark:text-rose-300 uppercase tracking-wider">- Capital Outflows</span>
-                <p className="mt-1 font-mono text-base font-bold text-rose-600 dark:text-rose-400 tabular-nums">
+              <div className="rounded-lg bg-rose-50/70 p-3.5 dark:bg-rose-950/30 border border-rose-200/70 dark:border-rose-800/50 flex flex-col justify-between">
+                <span className="text-xs font-semibold text-rose-700 dark:text-rose-300 uppercase tracking-wider">- Capital Outflows</span>
+                <p className="mt-1 text-2xl font-bold text-rose-600 dark:text-rose-400 tabular-nums">
                   - ₹ {totalOutflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-mono">Total Verified Debits</span>
+                <span className="text-xs text-rose-600/80 dark:text-rose-400/80">Total Verified Debits</span>
               </div>
 
-              <div className="rounded-lg bg-navy-900 p-3.5 border border-gold-500/40 text-gold-400 shadow-sm">
-                <span className="text-[10px] font-bold text-gold-300 uppercase tracking-wider">= Expected Closing</span>
-                <p className="mt-1 font-mono text-base font-bold text-gold-400 tabular-nums">
+              <div className="rounded-lg bg-navy-900 p-3.5 border border-gold-500/40 text-gold-400 shadow-sm flex flex-col justify-between">
+                <span className="text-xs font-bold text-gold-300 uppercase tracking-wider">= Expected Closing</span>
+                <p className="mt-1 text-2xl font-bold text-gold-400 tabular-nums">
                   = ₹ {expectedClosing.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] text-gold-400/80 font-mono">Calculated Balance</span>
+                <span className="text-xs text-gold-400/80">Calculated Balance</span>
               </div>
 
-              <div className={`rounded-lg p-3.5 border ${
+              <div className={`rounded-lg p-3.5 border flex flex-col justify-between ${
                 isBridgeReconciled
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-800'
                   : 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-800'
               }`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider">
+                <span className="text-xs font-bold uppercase tracking-wider">
                   {isBridgeReconciled ? 'Actual Closing (Reconciled)' : 'Closing Mismatch'}
                 </span>
-                <p className="mt-1 font-mono text-base font-bold tabular-nums">
+                <p className="mt-1 text-2xl font-bold tabular-nums">
                   ₹ {closingBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] font-mono">
+                <span className="text-xs font-semibold">
                   Variance: ₹ {balanceVariance.toFixed(2)}
                 </span>
               </div>

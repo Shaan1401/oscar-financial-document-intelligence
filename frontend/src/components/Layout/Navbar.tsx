@@ -3,6 +3,7 @@ import { Sun, Moon, UploadCloud, CheckCircle2, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { api } from '../../services/api';
+import { OscarLogo } from '../Common/OscarLogo';
 
 export const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
@@ -27,9 +28,7 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/90 bg-white/95 px-6 backdrop-blur dark:border-navy-800 dark:bg-navy-900/95 transition-colors">
       <div className="flex items-center space-x-3 min-w-0">
         <Link to="/" className="flex items-center space-x-3 group min-w-0">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-navy-900 border border-gold-400/40 text-gold-400 font-black tracking-wider shadow-sm group-hover:border-gold-400 transition">
-            O
-          </div>
+          <OscarLogo size={36} className="shrink-0 transition group-hover:scale-105" />
           <div className="min-w-0">
             <div className="flex items-baseline space-x-2 flex-wrap">
               <span className="font-extrabold text-lg text-slate-900 dark:text-[#F4F1E9] tracking-tight shrink-0">OSCAR</span>
