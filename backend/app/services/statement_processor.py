@@ -89,6 +89,9 @@ class StatementProcessor:
             statement.layout_type = parser.layout_type
             parsed_txns = parser.parse(doc_data)
 
+            # Idempotently clear prior transactions if re-processing
+            db.query(Transaction).filter(Transaction.statement_id == statement.id).delete()
+
             # 3. Normalize, Classify & Persist Transactions
             total_debits = Decimal("0.00")
             total_credits = Decimal("0.00")

@@ -8,6 +8,14 @@ import {
   MethodDistribution,
   ReconciliationResult,
   AuditEventItem,
+  RunningBalanceResponse,
+  ActivityHeatmapPoint,
+  MerchantConcentrationResponse,
+  PaymentChannelItem,
+  ClassificationDeepResponse,
+  ExtractionCompletenessResponse,
+  MultiStatementResponse,
+  CategoryTrendPoint,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -133,6 +141,35 @@ export const api = {
     return fetchJson<CashflowPoint[]>(`${API_BASE}/analytics/cashflow${q}`);
   },
   getDistribution: () => fetchJson<MethodDistribution[]>(`${API_BASE}/analytics/distribution`),
+  getRunningBalance: (statementId?: string) => {
+    const q = statementId ? `?statement_id=${statementId}` : '';
+    return fetchJson<RunningBalanceResponse>(`${API_BASE}/analytics/running-balance${q}`);
+  },
+  getActivityHeatmap: (statementId?: string) => {
+    const q = statementId ? `?statement_id=${statementId}` : '';
+    return fetchJson<ActivityHeatmapPoint[]>(`${API_BASE}/analytics/activity-heatmap${q}`);
+  },
+  getMerchantConcentration: (statementId?: string, limit: number = 10) => {
+    const params = new URLSearchParams();
+    if (statementId) params.set('statement_id', statementId);
+    if (limit) params.set('limit', String(limit));
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return fetchJson<MerchantConcentrationResponse>(`${API_BASE}/analytics/merchants${qs}`);
+  },
+  getPaymentChannels: (statementId?: string) => {
+    const q = statementId ? `?statement_id=${statementId}` : '';
+    return fetchJson<PaymentChannelItem[]>(`${API_BASE}/analytics/channels${q}`);
+  },
+  getClassificationDeep: () => fetchJson<ClassificationDeepResponse>(`${API_BASE}/analytics/classification-deep`),
+  getExtractionCompleteness: (statementId?: string) => {
+    const q = statementId ? `?statement_id=${statementId}` : '';
+    return fetchJson<ExtractionCompletenessResponse>(`${API_BASE}/analytics/completeness${q}`);
+  },
+  getMultiStatementComparison: () => fetchJson<MultiStatementResponse>(`${API_BASE}/analytics/multi-statement`),
+  getCategoryTrends: (statementId?: string) => {
+    const q = statementId ? `?statement_id=${statementId}` : '';
+    return fetchJson<CategoryTrendPoint[]>(`${API_BASE}/analytics/category-trends${q}`);
+  },
 
   // Audit
   getAuditEvents: (params?: { event_type?: string; statement_id?: string; limit?: number }) => {

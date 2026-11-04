@@ -18,6 +18,9 @@ class PageContent:
         blocks: List[Dict],
         ocr_status: Optional[str] = None,
         ocr_error: Optional[str] = None,
+        table_bboxes: Optional[List[List[Optional[str]]]] = None,
+        page_width: float = 612.0,
+        page_height: float = 792.0,
     ):
         self.page_number = page_number
         self.text = text
@@ -26,6 +29,9 @@ class PageContent:
         self.blocks = blocks
         self.ocr_status = ocr_status
         self.ocr_error = ocr_error
+        self.table_bboxes = table_bboxes or []
+        self.page_width = page_width
+        self.page_height = page_height
 
 class DocumentExtractor:
     """Extracts raw text, table structures, and metadata from PDF files using PyMuPDF & pdfplumber."""
@@ -120,19 +126,45 @@ class DocumentExtractor:
 
             # Extract tables using pdfplumber
             tables = []
+            table_bboxes = []
+            page_w = 612.0
+            page_h = 792.0
             if p_idx < len(plumber_doc.pages):
                 plumber_page = plumber_doc.pages[p_idx]
-                extracted_tables = plumber_page.extract_tables()
-                if extracted_tables:
-                    for t in extracted_tables:
+                page_w = float(plumber_page.width)
+                page_h = float(plumber_page.height)
+                found_tables = plumber_page.find_tables()
+                if found_tables:
+                    for t in found_tables:
+                        ext = t.extract()
                         cleaned_table = []
-                        for row in t:
+                        row_bboxes = []
+                        for r_idx, row in enumerate(ext):
                             cleaned_row = [FinancialNormalizer.clean_text(cell) if cell else "" for cell in row]
                             # Only keep non-empty rows
                             if any(cleaned_row):
                                 cleaned_table.append(cleaned_row)
+                                if r_idx < len(t.rows):
+                                    b = t.rows[r_idx].bbox
+                                    row_bboxes.append(f"{b[0]:.1f},{b[1]:.1f},{b[2]:.1f},{b[3]:.1f},{page_w:.1f},{page_h:.1f}")
+                                else:
+                                    row_bboxes.append(None)
                         if cleaned_table:
                             tables.append(cleaned_table)
+                            table_bboxes.append(row_bboxes)
+                else:
+                    extracted_tables = plumber_page.extract_tables()
+                    if extracted_tables:
+                        for t in extracted_tables:
+                            cleaned_table = []
+                            for row in t:
+                                cleaned_row = [FinancialNormalizer.clean_text(cell) if cell else "" for cell in row]
+                                # Only keep non-empty rows
+                                if any(cleaned_row):
+                                    cleaned_table.append(cleaned_row)
+                            if cleaned_table:
+                                tables.append(cleaned_table)
+                                table_bboxes.append([None] * len(cleaned_table))
 
             pages.append(PageContent(
                 page_number=p_idx + 1,
@@ -142,6 +174,9 @@ class DocumentExtractor:
                 blocks=blocks,
                 ocr_status=ocr_status,
                 ocr_error=ocr_error,
+                table_bboxes=table_bboxes,
+                page_width=page_w,
+                page_height=page_h,
             ))
 
         doc.close()

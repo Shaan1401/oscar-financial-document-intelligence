@@ -8,7 +8,8 @@ import pymupdf
 
 from app.database.session import get_db
 from app.database.models import Statement, Account, Transaction, AuditEvent
-from app.schemas.statement import StatementResponse, StatementUploadResponse, AccountInfoSchema
+from app.schemas.statement import StatementResponse, StatementUploadResponse, AccountInfoSchema, StatementDetailResponse
+from app.api.v1.endpoints.transactions import serialize_transaction
 from app.services.statement_processor import StatementProcessor
 from app.validation.normalizer import FinancialNormalizer
 
@@ -73,12 +74,29 @@ def list_statements(db: Session = Depends(get_db)):
     stmts = db.query(Statement).order_by(Statement.created_at.desc()).all()
     return [serialize_statement(s, db) for s in stmts]
 
-@router.get("/{statement_id}", response_model=StatementResponse)
+@router.get("/{statement_id}", response_model=StatementDetailResponse)
 def get_statement(statement_id: str, db: Session = Depends(get_db)):
     stmt = db.query(Statement).filter(Statement.id == statement_id).first()
     if not stmt:
-        raise HTTPException(status_code=404, detail="Statement not found")
-    return serialize_statement(stmt, db)
+        raise HTTPException(status_code=404, detail=f"Statement '{statement_id}' not found")
+
+    stmt_resp = serialize_statement(stmt, db)
+    txns = (
+        db.query(Transaction)
+        .filter(Transaction.statement_id == statement_id)
+        .order_by(Transaction.row_sequence.asc(), Transaction.id.asc())
+        .all()
+    )
+    accounts = db.query(Account).filter(Account.statement_id == statement_id).all()
+    primary_acc = AccountInfoSchema.model_validate(accounts[0]) if accounts else None
+    serialized_txns = [serialize_transaction(t) for t in txns]
+
+    return StatementDetailResponse(
+        **stmt_resp.model_dump(),
+        statement=stmt_resp,
+        account=primary_acc,
+        transactions=serialized_txns,
+    )
 
 @router.get("/{statement_id}/status")
 def get_statement_status(statement_id: str, db: Session = Depends(get_db)):

@@ -17,8 +17,8 @@
 | **Phase 3** | Non-LLM Hybrid Classification (Rules + TF-IDF LogReg) | **COMPLETED** | 6/6 tests passed in `test_classification.py`. 19-category synthetic dataset, rule engine with conflict detection, TF-IDF + LogisticRegression (100% test accuracy, LinearSVC comparison 99.65%), confidence gating |
 | **Phase 4** | Financial Reconciliation, Audit Trail & Evidence Viewer | **COMPLETED** | 6/6 tests passed in `test_financial_engineering.py`. Expected closing balance, variance, running balance verification, duplicate/anomaly detection, human review queue, approve/correct workflows, audit trail, analytics |
 | **Phase 5** | Professional React + TS + Tailwind Frontend | **COMPLETED** | React 19 + TypeScript + Vite + Tailwind CSS; 12 fully wired pages; Dark/Light mode toggle with persistence; Recharts interactive visualizations; zero mock data |
-| **Phase 6** | End-to-End Integration, QA Testing & Benchmarks | **COMPLETED** | 25/25 automated pytest tests passing; database populated with Layouts A, B, C; live API backend running; 100% benchmark precision & recall |
-| **Phase 7** | Submission Packaging, README, Screenshots, Git & Checklist | **COMPLETED** | Comprehensive publication-grade README.md created; 11 full-resolution screenshots captured; seed script created; git status clean and verified |
+| **Phase 6** | End-to-End Integration, QA Testing & Benchmarks | **COMPLETED** | 36/36 automated pytest tests passing (including `test_statement_details.py` and `test_analytics.py`); database populated with Layouts A, B, C; live API backend running; 100% benchmark precision & recall |
+| **Phase 7** | Submission Packaging, Workbench & Evidence Enhancement | **COMPLETED** | Evidence-First Operations Workbench; Financial Integrity Bridge; Split-screen Evidence Viewer with bounding box overlay; 8 deep analytics algorithms; 13 genuine screenshots; comprehensive README and docs |
 
 ---
 
@@ -38,25 +38,25 @@
 - `backend/app/classification/rule_engine.py`: 20 canonical Indian banking categories with rule conflict detection.
 - `backend/app/classification/ml_engine.py`: Scikit-learn dual TF-IDF (word + char n-grams) + Logistic Regression.
 - `backend/app/classification/hybrid_classifier.py`: Two-tiered hybrid orchestrator with confidence thresholding ($\tau = 0.65$).
-- `backend/app/services/statement_processor.py`: End-to-end ingestion, parsing, classification, and persistence pipeline.
+- `backend/app/services/statement_processor.py`: End-to-end ingestion, table row bounding-box geometry extraction, classification, and persistence pipeline.
 - `backend/app/services/reconciliation_service.py`: Equation validation, running balance step check, duplicate and anomaly detection.
 - `backend/app/services/review_service.py`: Human review queue, approval, and audited corrections.
-- `backend/app/services/analytics_service.py`: Portfolio KPIs, category distributions, cashflow timeline.
+- `backend/app/services/analytics_service.py`: Portfolio KPIs, running balance trajectory, activity heatmap, merchant Pareto concentration, payment channel breakdown, classification confidence bins, extraction completeness audit, currency-partitioned multi-statement comparison, and chronological category trends.
 - `backend/app/exports/excel_exporter.py`: Multi-tab openpyxl workbook (Transactions, Account Summary, Reconciliation, Audit Info).
 - `backend/app/exports/csv_exporter.py`: Standard CSV with formula injection protection.
-- `backend/app/api/v1/endpoints/`: Health, Statements, Transactions, Exports, Classification, Reconciliation, Reviews, Analytics, Audit.
+- `backend/app/api/v1/endpoints/`: Health, Statements (with `StatementDetailResponse` and PNG preview rendering), Transactions, Exports, Classification, Reconciliation, Reviews, Analytics (8 endpoints), Audit.
 
 ### Frontend Application (React 19 + TypeScript + Tailwind CSS)
 - `frontend/src/context/ThemeContext.tsx`: Persistent dark and light theme toggle.
-- `frontend/src/components/Layout/`: Navbar, Sidebar, and MainLayout.
-- `frontend/src/pages/Dashboard.tsx`: High-level operational statement KPIs, Recharts bar and pie charts, quick actions.
+- `frontend/src/components/Layout/`: Clean Navbar (with "Explainable Hybrid Classification" branding), Sidebar, and MainLayout.
+- `frontend/src/pages/Dashboard.tsx`: Evidence-First Financial Operations Workbench featuring Financial Integrity Bridge, Document Processing Journey, Cash Flow ComposedChart, Running Balance AreaChart, Accounting-aware Spending Distribution, and Daily Activity Calendar Heatmap.
 - `frontend/src/pages/Upload.tsx`: Drag-and-drop PDF upload with progress and automatic navigation.
 - `frontend/src/pages/StatementHistory.tsx`: List of statements with metadata, reconciliation status badges, and download links.
-- `frontend/src/pages/StatementDetails.tsx`: Split-screen interactive Evidence Viewer with synchronized page previews and traceability cards.
+- `frontend/src/pages/StatementDetails.tsx`: Split-screen interactive Evidence Viewer with synchronized PyMuPDF page previews, exact table-row bounding-box highlight overlay, and comprehensive Traceability & Evidence Inspector card.
 - `frontend/src/pages/TransactionExplorer.tsx`: Search, multi-criteria filtering, and pagination across all transactions.
 - `frontend/src/pages/ReviewExceptions.tsx`: Exception resolution queue with interactive correction modal and approval workflows.
 - `frontend/src/pages/ReconciliationCentre.tsx`: Mathematical proof of statement integrity, variance calculation, and recalculation triggers.
-- `frontend/src/pages/FinancialAnalytics.tsx`: Income vs Outflow charts, category breakdowns, and cashflow timelines.
+- `frontend/src/pages/FinancialAnalytics.tsx`: Deep Financial Intelligence featuring Merchant Concentration Pareto ComposedChart, Payment Channel horizontal bars, Category Spending Trends LineChart, Classification Confidence Bins, Field Completeness Audit, and Currency-Partitioned Comparative Ledger table.
 - `frontend/src/pages/ClassificationInsights.tsx`: Model evaluation metrics, confusion matrix, threshold curves, rule inspector, and retrain button.
 - `frontend/src/pages/ExportCentre.tsx`: Statement selector, multi-sheet Excel (.xlsx) and CSV export triggers.
 - `frontend/src/pages/AuditTrail.tsx`: Searchable chronological immutable audit events log.

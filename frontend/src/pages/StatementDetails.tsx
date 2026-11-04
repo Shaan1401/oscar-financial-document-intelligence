@@ -8,13 +8,36 @@ import {
   Scale,
   ShieldCheck,
   AlertTriangle,
-  Layers,
   ArrowLeft,
   Eye,
   CheckCircle2,
+  Crosshair,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { StatementDetailResponse } from '../types';
+
+const getBoundingBoxStyle = (
+  bboxStr?: string | null,
+  txnPage?: number,
+  activePage?: number
+): { style: React.CSSProperties; rawCoords: string } | null => {
+  if (!bboxStr || txnPage !== activePage) return null;
+  const parts = bboxStr.split(',').map((p) => parseFloat(p.trim()));
+  if (parts.length >= 4 && !parts.some(isNaN)) {
+    const [x0, y0, x1, y1] = parts;
+    const pageW = parts.length >= 5 && parts[4] > 0 ? parts[4] : 612;
+    const pageH = parts.length >= 6 && parts[5] > 0 ? parts[5] : 792;
+    const left = `${Math.max(0, (x0 / pageW) * 100)}%`;
+    const top = `${Math.max(0, (y0 / pageH) * 100)}%`;
+    const width = `${Math.min(100, ((x1 - x0) / pageW) * 100)}%`;
+    const height = `${Math.min(100, ((y1 - y0) / pageH) * 100)}%`;
+    return {
+      style: { left, top, width, height },
+      rawCoords: `[x0: ${x0.toFixed(1)}, y0: ${y0.toFixed(1)}, x1: ${x1.toFixed(1)}, y1: ${y1.toFixed(1)}]`,
+    };
+  }
+  return null;
+};
 
 export const StatementDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,11 +50,15 @@ export const StatementDetails: React.FC = () => {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
+    setError(null);
     api.getStatement(id)
       .then((res) => {
         setData(res);
-        if (res.transactions.length > 0) {
-          setSelectedTxnId(res.transactions[0].id);
+        const txns = Array.isArray(res?.transactions) ? res.transactions : [];
+        if (txns.length > 0) {
+          setSelectedTxnId(txns[0].id);
+        } else {
+          setSelectedTxnId(null);
         }
       })
       .catch((err) => setError(err.message))
@@ -48,14 +75,40 @@ export const StatementDetails: React.FC = () => {
 
   if (error || !data) {
     return (
-      <div className="p-8 text-center text-xs text-rose-600">
-        Error loading statement: {error || 'Statement not found'}
+      <div className="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900 my-12">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400 mb-4">
+          <AlertTriangle className="h-6 w-6" />
+        </div>
+        <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          Statement Not Found
+        </h2>
+        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+          {error || `Statement with ID '${id}' does not exist or could not be loaded.`}
+        </p>
+        <div className="mt-6 flex justify-center space-x-3">
+          <Link
+            to="/statements"
+            className="inline-flex items-center space-x-2 rounded-lg bg-brand-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-brand-700 transition"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Return to Statements</span>
+          </Link>
+          <Link
+            to="/upload"
+            className="inline-flex items-center space-x-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          >
+            <span>Upload New Statement</span>
+          </Link>
+        </div>
       </div>
     );
   }
 
-  const { statement, account, transactions } = data;
-  const selectedTxn = transactions.find((t) => t.id === selectedTxnId);
+  const statement = data.statement || (data as unknown as import('../types').Statement);
+  const account = data.account || ((data as any).accounts && (data as any).accounts[0]) || null;
+  const transactions = Array.isArray(data.transactions) ? data.transactions : [];
+  const selectedTxn = transactions.find((t) => t.id === selectedTxnId) || null;
+  const bboxInfo = getBoundingBoxStyle(selectedTxn?.bounding_box, selectedTxn?.source_page, currentPage);
 
   return (
     <div className="space-y-4">
@@ -133,12 +186,34 @@ export const StatementDetails: React.FC = () => {
           <p className="font-semibold text-slate-900 dark:text-white truncate">{statement.statement_period || 'N/A'}</p>
         </div>
         <div>
-          <span className="text-slate-400 text-[10px]">Reconciliation</span>
-          <p className={`font-semibold ${
-            statement.reconciliation_status === 'RECONCILED' ? 'text-emerald-600' : 'text-rose-600'
-          }`}>
-            {statement.reconciliation_status}
-          </p>
+          <span className="text-slate-400 text-[10px]">Reconciliation Status</span>
+          <div className="mt-0.5">
+            {statement.reconciliation_status === 'RECONCILED' ? (
+              <span className="inline-flex items-center space-x-1 rounded bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+                <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                <span>Reconciled</span>
+              </span>
+            ) : statement.reconciliation_status === 'PENDING' ? (
+              <span className="inline-flex items-center space-x-1 rounded bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
+                <AlertTriangle className="h-3 w-3 text-amber-500 shrink-0" />
+                <span>Pending Verification</span>
+              </span>
+            ) : statement.reconciliation_status === 'MISMATCH' ? (
+              <span className="inline-flex items-center space-x-1 rounded bg-rose-50 px-2 py-0.5 text-[11px] font-semibold text-rose-700 dark:bg-rose-950/50 dark:text-rose-300">
+                <AlertTriangle className="h-3 w-3 text-rose-500 shrink-0" />
+                <span>Mismatch (₹{statement.variance?.toFixed(2) ?? '0.00'})</span>
+              </span>
+            ) : statement.reconciliation_status === 'REVIEW_REQUIRED' ? (
+              <span className="inline-flex items-center space-x-1 rounded bg-purple-50 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:bg-purple-950/50 dark:text-purple-300">
+                <AlertTriangle className="h-3 w-3 text-purple-500 shrink-0" />
+                <span>Running Balance Discrepancy</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center space-x-1 rounded bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                <span>{statement.reconciliation_status}</span>
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -173,13 +248,25 @@ export const StatementDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Document Preview Image */}
-            <div className="mt-3 flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 p-2 dark:border-slate-800 dark:bg-slate-950/50 overflow-hidden">
-              <img
-                src={api.getPagePreviewUrl(statement.id, currentPage)}
-                alt={`Page ${currentPage} of ${statement.filename}`}
-                className="max-h-[560px] w-auto object-contain rounded shadow-sm"
-              />
+            {/* Document Preview Image with Traceability Highlighting Overlay */}
+            <div className="mt-3 flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 p-2 dark:border-slate-800 dark:bg-slate-950/50 overflow-hidden min-h-[420px]">
+              <div className="relative inline-block">
+                <img
+                  src={api.getPagePreviewUrl(statement.id, currentPage)}
+                  alt={`Page ${currentPage} of ${statement.filename}`}
+                  className="max-h-[560px] w-auto object-contain rounded shadow-sm select-none"
+                />
+                {bboxInfo && (
+                  <div
+                    style={bboxInfo.style}
+                    className="absolute pointer-events-none rounded border-2 border-brand-500 bg-brand-500/25 shadow-[0_0_12px_rgba(37,99,235,0.5)] transition-all duration-300 ring-2 ring-brand-400/40"
+                  >
+                    <div className="absolute -top-5 left-0 rounded bg-brand-600 px-1.5 py-0.5 text-[9px] font-bold text-white shadow-sm whitespace-nowrap">
+                      Row #{selectedTxn?.row_sequence}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -201,101 +288,187 @@ export const StatementDetails: React.FC = () => {
               </span>
             </div>
 
-            <div className="max-h-[380px] overflow-y-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="sticky top-0 bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                  <tr>
-                    <th className="px-3 py-2 font-semibold">#</th>
-                    <th className="px-3 py-2 font-semibold">Date</th>
-                    <th className="px-3 py-2 font-semibold">Description</th>
-                    <th className="px-3 py-2 font-semibold text-right">Debit</th>
-                    <th className="px-3 py-2 font-semibold text-right">Credit</th>
-                    <th className="px-3 py-2 font-semibold">Category</th>
-                    <th className="px-3 py-2 font-semibold">Method</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {transactions.map((t) => {
-                    const isSelected = t.id === selectedTxnId;
-                    return (
-                      <tr
-                        key={t.id}
-                        onClick={() => {
-                          setSelectedTxnId(t.id);
-                          setCurrentPage(t.source_page);
-                        }}
-                        className={`cursor-pointer transition-colors ${
-                          isSelected
-                            ? 'bg-brand-50/80 font-medium dark:bg-brand-950/50'
-                            : 'hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
-                        }`}
-                      >
-                        <td className="px-3 py-2 font-mono text-slate-400">{t.row_sequence}</td>
-                        <td className="px-3 py-2 whitespace-nowrap font-mono">{t.date}</td>
-                        <td className="px-3 py-2 max-w-[200px] truncate" title={t.description}>
-                          {t.description}
-                        </td>
-                        <td className="px-3 py-2 text-right font-mono text-rose-600">
-                          {t.debit > 0 ? `₹ ${t.debit.toFixed(2)}` : '-'}
-                        </td>
-                        <td className="px-3 py-2 text-right font-mono text-emerald-600">
-                          {t.credit > 0 ? `₹ ${t.credit.toFixed(2)}` : '-'}
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap">
-                          <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                            {t.category}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 whitespace-nowrap">
-                          <span
-                            className={`rounded px-1.5 py-0.5 text-[9px] font-semibold ${
-                              t.classification_method === 'RULE_BASED'
-                                ? 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                                : t.classification_method === 'MACHINE_LEARNING'
-                                ? 'bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300'
-                                : 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
-                            }`}
-                          >
-                            {t.classification_method}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            {transactions.length === 0 ? (
+              <div className="p-8 text-center text-xs text-slate-500">
+                <FileText className="mx-auto h-8 w-8 text-slate-300 dark:text-slate-600 mb-2" />
+                <p className="font-semibold text-slate-700 dark:text-slate-300">No Transactions Extracted</p>
+                <p className="mt-1 text-slate-400">
+                  {statement.status === 'PROCESSING'
+                    ? 'Statement processing is currently underway.'
+                    : 'This document contains no recognized transaction rows, or may require OCR re-processing.'}
+                </p>
+              </div>
+            ) : (
+              <div className="max-h-[380px] overflow-y-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="sticky top-0 bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                    <tr>
+                      <th className="px-3 py-2 font-semibold">#</th>
+                      <th className="px-3 py-2 font-semibold">Date</th>
+                      <th className="px-3 py-2 font-semibold">Description</th>
+                      <th className="px-3 py-2 font-semibold text-right">Debit</th>
+                      <th className="px-3 py-2 font-semibold text-right">Credit</th>
+                      <th className="px-3 py-2 font-semibold">Category</th>
+                      <th className="px-3 py-2 font-semibold">Method</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {transactions.map((t) => {
+                      const isSelected = t.id === selectedTxnId;
+                      return (
+                        <tr
+                          key={t.id}
+                          onClick={() => {
+                            setSelectedTxnId(t.id);
+                            setCurrentPage(t.source_page);
+                          }}
+                          className={`cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'bg-brand-50/80 font-medium dark:bg-brand-950/50'
+                              : 'hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
+                          }`}
+                        >
+                          <td className="px-3 py-2 font-mono text-slate-400">{t.row_sequence}</td>
+                          <td className="px-3 py-2 whitespace-nowrap font-mono">{t.date}</td>
+                          <td className="px-3 py-2 max-w-[200px] truncate" title={t.description}>
+                            {t.description}
+                          </td>
+                          <td className="px-3 py-2 text-right font-mono text-rose-600">
+                            {t.debit > 0 ? `₹ ${t.debit.toFixed(2)}` : '-'}
+                          </td>
+                          <td className="px-3 py-2 text-right font-mono text-emerald-600">
+                            {t.credit > 0 ? `₹ ${t.credit.toFixed(2)}` : '-'}
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                              {t.category}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            <span
+                              className={`rounded px-1.5 py-0.5 text-[9px] font-semibold ${
+                                t.classification_method === 'RULE_BASED'
+                                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                                  : t.classification_method === 'MACHINE_LEARNING'
+                                  ? 'bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300'
+                                  : 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
+                              }`}
+                            >
+                              {t.classification_method}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
-          {/* Selected Transaction Traceability Card */}
+          {/* Selected Transaction Traceability & Evidence Inspector */}
           {selectedTxn && (
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 text-xs space-y-2">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-2 dark:border-slate-800">
-                <span className="font-semibold text-slate-900 dark:text-white">
-                  Traceability Card (Row {selectedTxn.row_sequence})
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 text-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5 dark:border-slate-800">
+                <div className="flex items-center space-x-2">
+                  <Crosshair className="h-4 w-4 text-brand-600" />
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    Evidence Inspector & Traceability (Row #{selectedTxn.row_sequence})
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-mono text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                    Source Page: {selectedTxn.source_page}
+                  </span>
+                  <span className="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
+                    {selectedTxn.extraction_method}
+                  </span>
+                  {selectedTxn.validation_status === 'VALID' ? (
+                    <span className="inline-flex items-center space-x-1 rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+                      <ShieldCheck className="h-3 w-3 text-emerald-500" />
+                      <span>VALID</span>
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center space-x-1 rounded bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-950/50 dark:text-amber-300">
+                      <AlertTriangle className="h-3 w-3 text-amber-500" />
+                      <span>{selectedTxn.validation_status}</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Source Coordinates Reliability Strip */}
+              <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-1.5 font-mono text-[11px] text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+                <span className="flex items-center space-x-1.5">
+                  <span className={`h-2 w-2 rounded-full ${bboxInfo ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                  <span className="text-slate-400">PDF Geometry:</span>
+                  <span>{bboxInfo?.rawCoords || (selectedTxn.bounding_box ? `[${selectedTxn.bounding_box}]` : 'Geometric coordinates estimated')}</span>
                 </span>
-                <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-mono text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                  Page {selectedTxn.source_page}
+                <span className="text-[10px] text-slate-400">
+                  {selectedTxn.bounding_box ? 'Exact Table Row Match' : 'Heuristic Row Placement'}
                 </span>
               </div>
-              <div className="grid grid-cols-2 gap-3 pt-1">
+
+              {/* Extracted Fields Summary */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 rounded-lg border border-slate-100 bg-slate-50/50 p-2.5 dark:border-slate-800/80 dark:bg-slate-950/40">
                 <div>
-                  <span className="text-slate-400 text-[10px]">Raw Narration from PDF</span>
-                  <p className="font-mono text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2 rounded border border-slate-200 dark:border-slate-700 mt-0.5">
+                  <span className="text-[10px] text-slate-400">Extracted Date</span>
+                  <p className="font-mono font-medium text-slate-800 dark:text-slate-200">{selectedTxn.date}</p>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400">Debit / Inflow</span>
+                  <p className="font-mono font-medium text-rose-600">
+                    {selectedTxn.debit > 0 ? `₹ ${selectedTxn.debit.toFixed(2)}` : '-'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400">Credit / Outflow</span>
+                  <p className="font-mono font-medium text-emerald-600">
+                    {selectedTxn.credit > 0 ? `₹ ${selectedTxn.credit.toFixed(2)}` : '-'}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400">Running Balance</span>
+                  <p className="font-mono font-medium text-slate-800 dark:text-slate-200">
+                    {selectedTxn.balance != null ? `₹ ${selectedTxn.balance.toFixed(2)}` : 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Raw Narration & Explainable Classification */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <span className="text-slate-400 text-[10px] font-medium">Source Document Narration (Raw Text)</span>
+                  <p className="font-mono text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700 mt-0.5 break-all select-all">
                     {selectedTxn.raw_description || selectedTxn.description}
                   </p>
                 </div>
                 <div>
-                  <span className="text-slate-400 text-[10px]">Classification Explanation</span>
-                  <p className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2 rounded border border-slate-200 dark:border-slate-700 mt-0.5">
-                    {selectedTxn.classification_reason || 'Standard classification'}
-                  </p>
+                  <span className="text-slate-400 text-[10px] font-medium">Explainable Classification Rationale</span>
+                  <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700 mt-0.5 space-y-1">
+                    <p className="text-slate-800 dark:text-slate-200 font-medium">
+                      {selectedTxn.classification_reason || 'Standard hybrid classification'}
+                    </p>
+                    <div className="flex items-center space-x-2 text-[10px] text-slate-500 pt-0.5">
+                      <span>Model/Rule: <strong className="font-mono">{selectedTxn.rule_id || selectedTxn.model_version || 'Heuristic'}</strong></span>
+                      <span>•</span>
+                      <span>Confidence: <strong>{selectedTxn.confidence_score ? (selectedTxn.confidence_score * 100).toFixed(1) + '%' : '100%'}</strong></span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between pt-1 text-[11px] text-slate-500">
-                <span>Method: <strong>{selectedTxn.classification_method}</strong> ({selectedTxn.rule_id || selectedTxn.model_version || 'N/A'})</span>
-                <span>Score: <strong>{selectedTxn.confidence_score ? (selectedTxn.confidence_score * 100).toFixed(1) + '%' : '100%'}</strong></span>
-                <span>Status: <strong className={selectedTxn.review_status === 'APPROVED' ? 'text-emerald-600' : 'text-amber-600'}>{selectedTxn.review_status}</strong></span>
+
+              {/* Status and Warning Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2 text-[11px] text-slate-500 dark:border-slate-800">
+                <div className="flex items-center space-x-3">
+                  <span>Method: <strong className="text-slate-700 dark:text-slate-300">{selectedTxn.classification_method}</strong></span>
+                  <span>Review: <strong className={selectedTxn.review_status === 'APPROVED' ? 'text-emerald-600' : 'text-amber-600'}>{selectedTxn.review_status}</strong></span>
+                </div>
+                {selectedTxn.validation_warnings && (
+                  <span className="rounded bg-amber-50 px-2 py-0.5 text-[10px] text-amber-700 dark:bg-amber-950/60 dark:text-amber-300">
+                    Warning: {selectedTxn.validation_warnings}
+                  </span>
+                )}
               </div>
             </div>
           )}

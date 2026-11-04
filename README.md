@@ -162,8 +162,9 @@ OSCAR treats mathematical consistency as a first-class citizen:
 OSCAR bridges the gap between extracted tabular records and the source PDF document:
 
 - **Interactive Page Preview**: High-resolution PyMuPDF rendering ($200\text{ DPI}$) displayed directly inside the web browser.
-- **Row Synchronized Navigation**: Clicking any extracted transaction automatically navigates the PDF viewer to that transaction's `source_page`.
-- **Traceability Card**: Displays raw unparsed narration from the PDF, row sequence index, source page number, extraction method, assigned rule ID or model version, confidence score, and human review status.
+- **Dynamic Bounding-Box Highlighting**: Synchronized SVG/CSS coordinate overlay pulsating over the exact table row in the rendered source document on user selection.
+- **Row Synchronized Navigation**: Clicking any extracted transaction automatically navigates the PDF viewer to that transaction's `source_page` and brings the row into focus.
+- **Evidence Inspector & Traceability Card**: Displays source coordinates `[x0, y0, x1, y1]`, raw unparsed PDF narration, extraction method (`pdfplumber_table` / `ocr`), Explainable Hybrid Classification rationale, rule ID or model version, confidence gauge, and validation integrity status (`VALID`, `WARNING`, `ANOMALY`).
 
 ---
 
@@ -173,23 +174,25 @@ All screenshots below are captured from the live OSCAR application running with 
 
 | View | Screenshot |
 |---|---|
-| **Executive Dashboard** | ![Dashboard](screenshots/01_dashboard.png) |
-| **Interactive Evidence Viewer** | ![Evidence Viewer](screenshots/02_evidence_viewer.png) |
+| **Executive Dashboard (Operations Workbench)** | ![Dashboard](screenshots/01_dashboard.png) |
+| **Interactive Evidence Viewer (Traceability & BBoxes)** | ![Evidence Viewer](screenshots/02_evidence_viewer.png) |
 | **Reconciliation Centre** | ![Reconciliation Centre](screenshots/03_reconciliation.png) |
 | **Review & Exceptions Centre** | ![Review Exceptions](screenshots/04_reviews.png) |
-| **Classification Insights (Non-LLM)** | ![Classification Insights](screenshots/05_classification_insights.png) |
-| **Financial Analytics & Cashflow** | ![Financial Analytics](screenshots/06_analytics.png) |
+| **Classification Insights (Explainable Hybrid)** | ![Classification Insights](screenshots/05_classification_insights.png) |
+| **Financial Analytics & Deep Intelligence** | ![Financial Analytics](screenshots/06_analytics.png) |
 | **Transaction Explorer & Filters** | ![Transaction Explorer](screenshots/07_transaction_explorer.png) |
 | **Statement History** | ![Statement History](screenshots/08_statement_history.png) |
 | **Export Centre (Excel / CSV)** | ![Export Centre](screenshots/09_export_centre.png) |
 | **Immutable Audit Trail** | ![Audit Trail](screenshots/10_audit_trail.png) |
 | **Settings & Diagnostics** | ![Settings](screenshots/11_settings.png) |
+| **Executive Dashboard (Dark Theme)** | ![Dashboard Dark](screenshots/12_dashboard_dark.png) |
+| **Financial Analytics (Dark Theme)** | ![Analytics Dark](screenshots/13_analytics_dark.png) |
 
 ---
 
 ## Automated Verification & Benchmark Metrics
 
-### Backend Pytest Suite (25/25 Passing)
+### Backend Pytest Suite (36/36 Passing)
 
 ```bash
 & .venv\Scripts\python.exe -m pytest -v
@@ -199,35 +202,46 @@ All screenshots below are captured from the live OSCAR application running with 
 ============================= test session starts =============================
 platform win32 -- Python 3.11.15, pytest-8.4.2, pluggy-1.7.0
 rootdir: F:\Projects\OSCAR, configfile: pytest.ini, testpaths: backend/tests
-collected 25 items
+collected 36 items
 
-backend/tests/test_classification.py::test_rule_engine_matching PASSED   [  4%]
-backend/tests/test_classification.py::test_rule_conflict_detection PASSED [  8%]
-backend/tests/test_classification.py::test_ml_engine_prediction PASSED   [ 12%]
-backend/tests/test_classification.py::test_hybrid_classifier_workflow PASSED [ 16%]
-backend/tests/test_classification.py::test_classification_api_endpoints PASSED [ 20%]
-backend/tests/test_classification.py::test_statement_processing_assigns_categories PASSED [ 24%]
-backend/tests/test_financial_engineering.py::test_reconciliation_exact_match PASSED [ 28%]
-backend/tests/test_financial_engineering.py::test_reconciliation_detects_mismatch PASSED [ 32%]
-backend/tests/test_financial_engineering.py::test_reconciliation_api_endpoints PASSED [ 36%]
-backend/tests/test_financial_engineering.py::test_review_and_approval_workflow PASSED [ 40%]
-backend/tests/test_financial_engineering.py::test_review_correction_workflow PASSED [ 44%]
-backend/tests/test_financial_engineering.py::test_analytics_endpoints PASSED [ 48%]
-backend/tests/test_multi_layout_and_ocr.py::test_layout_a_benchmark PASSED [ 52%]
-backend/tests/test_multi_layout_and_ocr.py::test_layout_b_combined_amount_benchmark PASSED [ 56%]
-backend/tests/test_multi_layout_and_ocr.py::test_layout_c_multipage_wrapped_benchmark PASSED [ 60%]
-backend/tests/test_multi_layout_and_ocr.py::test_scanned_pdf_page_type_detection PASSED [ 64%]
-backend/tests/test_multi_layout_and_ocr.py::test_tesseract_detector_diagnostics PASSED [ 68%]
+backend/tests/test_analytics.py::test_analytics_running_balance PASSED   [  2%]
+backend/tests/test_analytics.py::test_analytics_activity_heatmap PASSED  [  5%]
+backend/tests/test_analytics.py::test_analytics_merchant_concentration PASSED [  8%]
+backend/tests/test_analytics.py::test_analytics_payment_channels PASSED  [ 11%]
+backend/tests/test_analytics.py::test_analytics_classification_deep PASSED [ 13%]
+backend/tests/test_analytics.py::test_analytics_extraction_completeness PASSED [ 16%]
+backend/tests/test_analytics.py::test_analytics_multi_statement PASSED   [ 19%]
+backend/tests/test_analytics.py::test_analytics_category_trends PASSED   [ 22%]
+backend/tests/test_classification.py::test_rule_engine_matching PASSED   [ 25%]
+backend/tests/test_classification.py::test_rule_conflict_detection PASSED [ 27%]
+backend/tests/test_classification.py::test_ml_engine_prediction PASSED   [ 30%]
+backend/tests/test_classification.py::test_hybrid_classifier_workflow PASSED [ 33%]
+backend/tests/test_classification.py::test_classification_api_endpoints PASSED [ 36%]
+backend/tests/test_classification.py::test_statement_processing_assigns_categories PASSED [ 38%]
+backend/tests/test_financial_engineering.py::test_reconciliation_exact_match PASSED [ 41%]
+backend/tests/test_financial_engineering.py::test_reconciliation_detects_mismatch PASSED [ 44%]
+backend/tests/test_financial_engineering.py::test_reconciliation_api_endpoints PASSED [ 47%]
+backend/tests/test_financial_engineering.py::test_review_and_approval_workflow PASSED [ 50%]
+backend/tests/test_financial_engineering.py::test_review_correction_workflow PASSED [ 52%]
+backend/tests/test_financial_engineering.py::test_analytics_endpoints PASSED [ 55%]
+backend/tests/test_multi_layout_and_ocr.py::test_layout_a_benchmark PASSED [ 58%]
+backend/tests/test_multi_layout_and_ocr.py::test_layout_b_combined_amount_benchmark PASSED [ 61%]
+backend/tests/test_multi_layout_and_ocr.py::test_layout_c_multipage_wrapped_benchmark PASSED [ 63%]
+backend/tests/test_multi_layout_and_ocr.py::test_scanned_pdf_page_type_detection PASSED [ 66%]
+backend/tests/test_multi_layout_and_ocr.py::test_tesseract_detector_diagnostics PASSED [ 69%]
 backend/tests/test_multi_layout_and_ocr.py::test_ocr_preprocessor PASSED [ 72%]
-backend/tests/test_multi_layout_and_ocr.py::test_ocr_extractor_handles_unavailable_or_executes PASSED [ 76%]
-backend/tests/test_vertical_slice.py::test_health_check PASSED           [ 80%]
-backend/tests/test_vertical_slice.py::test_pdf_validator_rejects_invalid_bytes PASSED [ 84%]
-backend/tests/test_vertical_slice.py::test_pdf_validator_accepts_valid_pdf PASSED [ 88%]
-backend/tests/test_vertical_slice.py::test_text_and_table_extraction PASSED [ 92%]
-backend/tests/test_vertical_slice.py::test_generic_bank_parser PASSED    [ 96%]
+backend/tests/test_multi_layout_and_ocr.py::test_ocr_extractor_handles_unavailable_or_executes PASSED [ 75%]
+backend/tests/test_statement_details.py::test_statement_detail_valid_id PASSED [ 77%]
+backend/tests/test_statement_details.py::test_statement_detail_unknown_id PASSED [ 80%]
+backend/tests/test_statement_details.py::test_statement_detail_empty_transactions PASSED [ 83%]
+backend/tests/test_vertical_slice.py::test_health_check PASSED           [ 86%]
+backend/tests/test_vertical_slice.py::test_pdf_validator_rejects_invalid_bytes PASSED [ 88%]
+backend/tests/test_vertical_slice.py::test_pdf_validator_accepts_valid_pdf PASSED [ 91%]
+backend/tests/test_vertical_slice.py::test_text_and_table_extraction PASSED [ 94%]
+backend/tests/test_vertical_slice.py::test_generic_bank_parser PASSED    [ 97%]
 backend/tests/test_vertical_slice.py::test_statement_processing_vertical_slice PASSED [100%]
 
-============================= 25 passed in 9.65s ==============================
+============================= 36 passed in 10.70s =============================
 ```
 
 ### Extraction Fidelity Benchmark vs Ground Truth

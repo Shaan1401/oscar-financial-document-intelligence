@@ -34,6 +34,10 @@ def serialize_transaction(t: Transaction) -> TransactionResponse:
         validation_warnings=t.validation_warnings,
         source_page=t.source_page,
         row_sequence=t.row_sequence,
+        extraction_method=t.extraction_method or "digital_text",
+        bounding_box=t.bounding_box,
+        rule_id=t.rule_id,
+        model_version=t.model_version,
         is_duplicate=t.is_duplicate,
         is_anomaly=t.is_anomaly,
     )

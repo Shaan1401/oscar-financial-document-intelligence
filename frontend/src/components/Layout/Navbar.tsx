@@ -62,15 +62,6 @@ export const Navbar: React.FC = () => {
           </div>
         )}
 
-        {/* Non-LLM Compliance Badge */}
-        <div
-          className="hidden md:flex items-center space-x-1.5 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
-          title="Strictly Non-LLM Architecture: Heuristic Rules & Traditional Machine Learning"
-        >
-          <ShieldCheck className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400" />
-          <span>Strict Non-LLM</span>
-        </div>
-
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}

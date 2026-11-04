@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
+from app.schemas.transaction import TransactionResponse
 
 class AccountInfoSchema(BaseModel):
     holder_name: Optional[str] = None
@@ -47,3 +48,8 @@ class StatementUploadResponse(BaseModel):
     page_count: int
     status: str
     message: str
+
+class StatementDetailResponse(StatementResponse):
+    statement: StatementResponse
+    account: Optional[AccountInfoSchema] = None
+    transactions: List[TransactionResponse] = []

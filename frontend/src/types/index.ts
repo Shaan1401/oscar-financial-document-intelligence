@@ -126,3 +126,110 @@ export interface AuditEventItem {
   created_at?: string | null;
 }
 
+export interface RunningBalancePoint {
+  sequence: number;
+  date: string;
+  description: string;
+  debit: number;
+  credit: number;
+  balance: number;
+  net_change: number;
+  is_negative: boolean;
+  is_anomaly: boolean;
+  validation_status: string;
+  validation_warnings?: string | null;
+}
+
+export interface RunningBalanceResponse {
+  statement_id?: string | null;
+  filename?: string | null;
+  bank_name?: string | null;
+  currency: string;
+  opening_balance: number;
+  closing_balance: number;
+  points: RunningBalancePoint[];
+}
+
+export interface ActivityHeatmapPoint {
+  date: string;
+  count: number;
+  debits: number;
+  credits: number;
+  total_volume: number;
+  net: number;
+}
+
+export interface MerchantConcentrationItem {
+  merchant: string;
+  amount: number;
+  count: number;
+  percentage: number;
+  cumulative_percentage: number;
+}
+
+export interface MerchantConcentrationResponse {
+  total_tracked_spending: number;
+  top_merchants: MerchantConcentrationItem[];
+}
+
+export interface PaymentChannelItem {
+  channel: string;
+  count: number;
+  total_amount: number;
+  percentage: number;
+}
+
+export interface ClassificationScoreBin {
+  range: string;
+  min: number;
+  max: number;
+  count: number;
+  percentage: number;
+}
+
+export interface ClassificationDeepResponse {
+  total_transactions: number;
+  rule_based_count: number;
+  rule_based_percentage: number;
+  ml_based_count: number;
+  ml_based_percentage: number;
+  manual_count: number;
+  needs_review_count: number;
+  score_distribution: ClassificationScoreBin[];
+}
+
+export interface ExtractionCompletenessResponse {
+  total_records: number;
+  date_completeness_pct: number;
+  description_completeness_pct: number;
+  amount_completeness_pct: number;
+  balance_completeness_pct: number;
+  coordinates_completeness_pct: number;
+  overall_completeness_pct: number;
+}
+
+export interface MultiStatementItem {
+  statement_id: string;
+  filename: string;
+  bank_name: string;
+  statement_period: string;
+  opening_balance: number;
+  total_credits: number;
+  total_debits: number;
+  net_movement: number;
+  closing_balance: number;
+  reconciliation_status: string;
+  transaction_count: number;
+}
+
+export interface MultiStatementResponse {
+  by_currency: Record<string, MultiStatementItem[]>;
+}
+
+export interface CategoryTrendPoint {
+  date: string;
+  total_debit: number;
+  total_credit: number;
+  [key: string]: any;
+}
+

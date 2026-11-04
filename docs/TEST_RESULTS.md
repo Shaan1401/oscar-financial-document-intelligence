@@ -90,10 +90,63 @@ This document records the actual commands executed, outcomes, test metrics, and 
 
 ---
 
-## 6. Comprehensive Test Suite Overview
+## 6. Statement Details & Data Contract Tests (Phase 7)
 
-**Total Automated Tests**: 25  
-**Passing**: 25 (100%)  
+**Execution Command**:  
+`pytest backend/tests/test_statement_details.py -v`
+
+| Test ID | Test Case | Target Tested | Result | Duration |
+|---|---|---|---|---|
+| SD-01 | `test_statement_detail_valid_id` | Verifies `StatementDetailResponse` contract (`statement`, `account`, `transactions`), avoids undefined property errors | **PASSED** | 0.08s |
+| SD-02 | `test_statement_detail_unknown_id` | Unknown UUID handling with clean 404 response and structured detail | **PASSED** | 0.02s |
+| SD-03 | `test_statement_detail_empty_transactions` | Statements with 0 transactions return empty array without runtime crashes | **PASSED** | 0.05s |
+
+**Summary**: 3 passed in 0.28s (100% pass rate).
+
+---
+
+## 7. Advanced Financial Intelligence & Analytics Endpoints (Phase 7)
+
+**Execution Command**:  
+`pytest backend/tests/test_analytics.py -v`
+
+| Test ID | Test Case | Target Tested | Result | Duration |
+|---|---|---|---|---|
+| AN-01 | `test_analytics_running_balance` | Cumulative balance trajectory, opening balance baseline, min/max calculations | **PASSED** | 0.04s |
+| AN-02 | `test_analytics_activity_heatmap` | 365-day calendar transaction frequency & debit volume density aggregation | **PASSED** | 0.03s |
+| AN-03 | `test_analytics_merchant_concentration`| Merchant identification regex, Pareto 80/20 cumulative concentration curve | **PASSED** | 0.05s |
+| AN-04 | `test_analytics_payment_channels` | Channel identification (UPI, NEFT, IMPS, RTGS, POS, ATM, ECS) debit/credit split | **PASSED** | 0.03s |
+| AN-05 | `test_analytics_classification_deep` | Confidence score distribution bins (90-100%, 80-89%, etc.), method breakdown | **PASSED** | 0.04s |
+| AN-06 | `test_analytics_extraction_completeness`| Field completeness audit percentages (date, description, amount, balance, coordinates) | **PASSED** | 0.03s |
+| AN-07 | `test_analytics_multi_statement` | Currency-partitioned comparative ledger, opening/closing balances, net flow | **PASSED** | 0.05s |
+| AN-08 | `test_analytics_category_trends` | Chronological category expenditure velocities over statement intervals | **PASSED** | 0.04s |
+
+**Summary**: 8 passed in 0.52s (100% pass rate).
+
+---
+
+## 8. Frontend TypeScript & Production Build Verification
+
+**Execution Command**:  
+`npm --prefix frontend run build` (`tsc -b && vite build`)
+
+- **Modules Transformed**: 2,447 modules
+- **TypeScript Errors**: 0
+- **Bundle Output**:
+  - `dist/index.html`: 1.02 kB (gzip: 0.56 kB)
+  - `dist/assets/index-*.css`: 33.41 kB (gzip: 6.38 kB)
+  - `dist/assets/index-*.js`: 821.57 kB (gzip: 226.81 kB)
+- **Exit Code**: 0 (PASSED in 4.42s)
+
+---
+
+## 9. Comprehensive Test Suite Overview
+
+**Total Automated Pytest Tests**: 36  
+**Passing**: 36 (100%)  
 **Failing**: 0  
 **Skipped**: 0  
-**Overall Execution Time**: ~9.6s
+**Pytest Execution Time**: ~10.7s  
+**Full Production Build**: Verified Clean (Exit Code 0)  
+**Live HTTP Endpoints**: Verified 200 OK across all 8 Analytics & Statement APIs  
+**UI Screenshots**: 13 genuine screenshots captured in `screenshots/` (Light & Dark modes)

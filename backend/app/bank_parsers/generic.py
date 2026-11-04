@@ -34,8 +34,12 @@ class GenericBankParser(BaseBankParser):
         current_header_mapping: Optional[Dict[str, int]] = None
 
         for page in pages:
-            for table in page.tables:
+            table_bboxes = getattr(page, "table_bboxes", [])
+            for t_idx, table in enumerate(page.tables):
+                bboxes = table_bboxes[t_idx] if t_idx < len(table_bboxes) else []
                 for row_idx, row in enumerate(table):
+                    row_bbox = bboxes[row_idx] if row_idx < len(bboxes) else None
+
                     # Check if row is a header
                     mapping = HeaderDetector.match_header(row)
                     if mapping:
@@ -66,6 +70,20 @@ class GenericBankParser(BaseBankParser):
                         prev = transactions[-1]
                         prev.description = FinancialNormalizer.clean_text(f"{prev.description} {raw_desc}")
                         prev.raw_description = f"{prev.raw_description}\n{raw_desc}"
+                        if row_bbox and prev.bounding_box:
+                            try:
+                                p_parts = [float(x) for x in prev.bounding_box.split(",")]
+                                r_parts = [float(x) for x in row_bbox.split(",")]
+                                if len(p_parts) >= 4 and len(r_parts) >= 4:
+                                    min_x0 = min(p_parts[0], r_parts[0])
+                                    min_y0 = min(p_parts[1], r_parts[1])
+                                    max_x1 = max(p_parts[2], r_parts[2])
+                                    max_y1 = max(p_parts[3], r_parts[3])
+                                    pw = p_parts[4] if len(p_parts) > 4 else 612.0
+                                    ph = p_parts[5] if len(p_parts) > 5 else 792.0
+                                    prev.bounding_box = f"{min_x0:.1f},{min_y0:.1f},{max_x1:.1f},{max_y1:.1f},{pw:.1f},{ph:.1f}"
+                            except Exception:
+                                pass
                         continue
 
                     # If date is absent or row has no financial amounts, skip
@@ -118,7 +136,8 @@ class GenericBankParser(BaseBankParser):
                         balance=balance_val,
                         source_page=page.page_number,
                         row_sequence=row_seq,
-                        extraction_method="digital_text" if page.page_type == "text" else page.page_type,
+                        bounding_box=row_bbox,
+                        extraction_method="pdfplumber_table" if row_bbox else ("digital_text" if page.page_type == "text" else page.page_type),
                         validation_warnings=warnings,
                     ))
 

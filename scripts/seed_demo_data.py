@@ -63,7 +63,8 @@ def seed_demo_data():
         existing = db.query(Statement).filter(Statement.file_hash == f_hash).first()
 
         if existing:
-            print(f"Statement '{filename}' already ingested (ID: {existing.id}). Reconciling...")
+            print(f"Statement '{filename}' already ingested (ID: {existing.id}). Refreshing extraction & reconciling...")
+            stmt = StatementProcessor.process_statement(db, existing.id)
             rec = ReconciliationService.reconcile_statement(db, existing.id)
             print(f"  Reconciliation: {rec['status']}, Variance: INR {rec['variance']:.2f}")
         else:

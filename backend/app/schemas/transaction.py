@@ -15,11 +15,15 @@ class TransactionResponse(BaseModel):
     classification_method: str
     confidence_score: Optional[float] = None
     classification_reason: Optional[str] = None
+    rule_id: Optional[str] = None
+    model_version: Optional[str] = None
     review_status: str
     validation_status: str
     validation_warnings: Optional[str] = None
     source_page: int
     row_sequence: int
+    extraction_method: str = "digital_text"
+    bounding_box: Optional[str] = None
     is_duplicate: bool = False
     is_anomaly: bool = False
 
