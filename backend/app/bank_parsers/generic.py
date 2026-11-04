@@ -126,6 +126,8 @@ class GenericBankParser(BaseBankParser):
 
                     row_seq += 1
                     clean_desc = FinancialNormalizer.clean_text(raw_desc) or "Unspecified Transaction"
+                    is_ocr = page.page_type == "scanned" or getattr(page, "ocr_status", None) == "SUCCESS"
+                    ext_method = "ocr" if is_ocr else ("pdfplumber_table" if row_bbox else "digital_text")
 
                     transactions.append(ParsedTransaction(
                         date=std_date,
@@ -137,7 +139,7 @@ class GenericBankParser(BaseBankParser):
                         source_page=page.page_number,
                         row_sequence=row_seq,
                         bounding_box=row_bbox,
-                        extraction_method="pdfplumber_table" if row_bbox else ("digital_text" if page.page_type == "text" else page.page_type),
+                        extraction_method=ext_method,
                         validation_warnings=warnings,
                     ))
 

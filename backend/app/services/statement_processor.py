@@ -172,6 +172,13 @@ class StatementProcessor:
             db.commit()
             db.refresh(statement)
 
+            # Automatically evaluate reconciliation
+            from app.services.reconciliation_service import ReconciliationService
+            try:
+                ReconciliationService.reconcile_statement(db, statement.id)
+            except Exception:
+                pass
+
             cls._log_audit(
                 db, "EXTRACTION", statement.id,
                 f"Extracted {len(parsed_txns)} transactions using {parser.name}"

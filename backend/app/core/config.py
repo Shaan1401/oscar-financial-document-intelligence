@@ -37,11 +37,17 @@ class Settings(BaseSettings):
     ML_CONFIDENCE_THRESHOLD: float = 0.65
 
     class Config:
-        env_file = ".env"
+        env_file = (str(PROJECT_ROOT / ".env"), str(BASE_DIR / ".env"), ".env")
         env_file_encoding = "utf-8"
         extra = "ignore"
 
 settings = Settings()
+
+# Windows auto-detection fallback for standard Tesseract installation
+if not settings.TESSERACT_CMD and os.name == "nt":
+    standard_tesseract = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
+    if standard_tesseract.is_file():
+        settings.TESSERACT_CMD = str(standard_tesseract)
 
 # Ensure critical directories exist
 settings.STORAGE_DIR.mkdir(parents=True, exist_ok=True)

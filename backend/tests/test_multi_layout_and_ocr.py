@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw
 from app.core.config import settings
 from app.extraction.text_extractor import DocumentExtractor
 from app.extraction.ocr_extractor import TesseractDetector, OCRPreprocessor, OCRExtractor
+from app.bank_parsers.generic import GenericBankParser
 from app.validation.benchmark import ExtractionBenchmark
 
 SAMPLE_DIR = settings.SAMPLE_DATA_DIR
@@ -107,4 +108,31 @@ def test_ocr_extractor_handles_unavailable_or_executes():
     if res["status"] == "OCR_UNAVAILABLE":
         assert res["text"] == ""
         assert res["error"] is not None
+
+def test_scanned_pdf_tesseract_ocr_extraction():
+    status = TesseractDetector.get_status(refresh=True)
+    if not status["available"]:
+        pytest.skip("Tesseract OCR binary not installed on host")
+
+    pdf_path = SAMPLE_DIR / "pdf" / "synthetic_statement_scanned.pdf"
+    assert pdf_path.exists(), "Scanned PDF must exist"
+
+    doc_data = DocumentExtractor.extract_document(pdf_path)
+    assert doc_data["pdf_type"] == "scanned"
+    assert len(doc_data["pages"]) == 1
+
+    page = doc_data["pages"][0]
+    assert page.ocr_status == "SUCCESS"
+    assert len(page.tables) >= 1
+
+    parser = GenericBankParser()
+    assert parser.can_parse(doc_data) > 0.5
+    txns = parser.parse(doc_data)
+
+    assert len(txns) == 15, f"Expected 15 transactions extracted via OCR, got {len(txns)}"
+    for t in txns:
+        assert t.extraction_method == "ocr"
+        assert t.bounding_box is not None
+        assert t.date.startswith("2026-")
+        assert t.balance is not None
 
