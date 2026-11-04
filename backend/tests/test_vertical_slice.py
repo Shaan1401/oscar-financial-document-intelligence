@@ -20,19 +20,6 @@ def setup_test_db():
     init_db()
     yield
 
-@pytest.fixture(autouse=True)
-def clean_db():
-    from app.database.session import SessionLocal
-    db = SessionLocal()
-    try:
-        db.query(Transaction).delete()
-        db.query(Account).delete()
-        db.query(Statement).delete()
-        db.commit()
-    finally:
-        db.close()
-    yield
-
 @pytest.fixture
 def client():
     with TestClient(app) as c:
@@ -95,8 +82,10 @@ def test_generic_bank_parser(sample_pdf_path):
     assert first.balance == Decimal("130000.00")
 
 def test_statement_processing_vertical_slice(client, sample_pdf_path):
+    import time
     with open(sample_pdf_path, "rb") as f:
-        files = {"file": ("test_statement.pdf", f.read(), "application/pdf")}
+        salted_bytes = f.read() + f"\n% test_vertical_slice_{time.time()}".encode("utf-8")
+        files = {"file": ("test_statement_slice.pdf", salted_bytes, "application/pdf")}
     
     response = client.post("/api/v1/statements/upload", files=files)
     assert response.status_code == 200
@@ -109,28 +98,39 @@ def test_statement_processing_vertical_slice(client, sample_pdf_path):
 
     statement_id = stmt_data["id"]
 
-    # 1. Fetch transactions list
-    txn_res = client.get(f"/api/v1/transactions?statement_id={statement_id}")
-    assert txn_res.status_code == 200
-    txns = txn_res.json()["items"]
-    assert len(txns) == 15
+    try:
+        # 1. Fetch transactions list
+        txn_res = client.get(f"/api/v1/transactions?statement_id={statement_id}")
+        assert txn_res.status_code == 200
+        txns = txn_res.json()["items"]
+        assert len(txns) == 15
 
-    # 2. Test Excel Export
-    excel_res = client.get(f"/api/v1/exports/{statement_id}/excel")
-    assert excel_res.status_code == 200
-    assert excel_res.headers["content-type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    assert len(excel_res.content) > 1000
+        # 2. Test Excel Export
+        excel_res = client.get(f"/api/v1/exports/{statement_id}/excel")
+        assert excel_res.status_code == 200
+        assert excel_res.headers["content-type"] == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        assert len(excel_res.content) > 1000
 
-    # 3. Test CSV Export
-    csv_res = client.get(f"/api/v1/exports/{statement_id}/csv")
-    assert csv_res.status_code == 200
-    assert "text/csv" in csv_res.headers["content-type"]
-    csv_text = csv_res.content.decode("utf-8")
-    assert "Date,Description,Debit,Credit,Balance" in csv_text
-    assert "SALARY CREDIT" in csv_text
+        # 3. Test CSV Export
+        csv_res = client.get(f"/api/v1/exports/{statement_id}/csv")
+        assert csv_res.status_code == 200
+        assert "text/csv" in csv_res.headers["content-type"]
+        csv_text = csv_res.content.decode("utf-8")
+        assert "Date,Description,Debit,Credit,Balance" in csv_text
+        assert "SALARY CREDIT" in csv_text
 
-    # 4. Test Evidence Viewer Page Preview
-    preview_res = client.get(f"/api/v1/statements/{statement_id}/pages/1/preview")
-    assert preview_res.status_code == 200
-    assert preview_res.headers["content-type"] == "image/png"
-    assert len(preview_res.content) > 5000
+        # 4. Test Evidence Viewer Page Preview
+        preview_res = client.get(f"/api/v1/statements/{statement_id}/pages/1/preview")
+        assert preview_res.status_code == 200
+        assert preview_res.headers["content-type"] == "image/png"
+        assert len(preview_res.content) > 5000
+    finally:
+        from app.database.session import SessionLocal
+        db = SessionLocal()
+        try:
+            stmt = db.query(Statement).filter(Statement.id == statement_id).first()
+            if stmt:
+                db.delete(stmt)
+                db.commit()
+        finally:
+            db.close()

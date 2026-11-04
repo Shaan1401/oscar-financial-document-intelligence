@@ -7,6 +7,7 @@ from app.classification.rule_engine import RuleEngine, Rule
 from app.classification.ml_engine import MLEngine
 from app.classification.hybrid_classifier import HybridClassifier
 from app.database.session import SessionLocal
+from app.database.models import Statement
 from app.services.statement_processor import StatementProcessor
 
 client = TestClient(app)
@@ -101,6 +102,7 @@ def test_statement_processing_assigns_categories():
         content = f.read()
 
     db = SessionLocal()
+    stmt_id = None
     try:
         import uuid
         unique_suffix = uuid.uuid4().hex[:8]
@@ -108,7 +110,8 @@ def test_statement_processing_assigns_categories():
         unique_content = content + f"\n%test-salt-{unique_suffix}".encode("utf-8")
         test_filename = f"classify_test_{unique_suffix}.pdf"
         stmt = StatementProcessor.save_and_validate_upload(db, unique_content, test_filename)
-        processed = StatementProcessor.process_statement(db, stmt.id)
+        stmt_id = stmt.id
+        processed = StatementProcessor.process_statement(db, stmt_id)
 
         assert processed.status == "PROCESSED"
         txns = processed.transactions
@@ -127,4 +130,12 @@ def test_statement_processing_assigns_categories():
         assert salary_txns[0].category == "Salary & Income"
 
     finally:
+        if stmt_id:
+            try:
+                s_clean = db.query(Statement).filter(Statement.id == stmt_id).first()
+                if s_clean:
+                    db.delete(s_clean)
+                    db.commit()
+            except Exception:
+                pass
         db.close()

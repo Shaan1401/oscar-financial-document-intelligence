@@ -27,7 +27,18 @@ def processed_statement_id():
         stmt_id = processed.id
     finally:
         db.close()
-    return stmt_id
+
+    try:
+        yield stmt_id
+    finally:
+        db_cleanup = SessionLocal()
+        try:
+            s = db_cleanup.query(Statement).filter(Statement.id == stmt_id).first()
+            if s:
+                db_cleanup.delete(s)
+                db_cleanup.commit()
+        finally:
+            db_cleanup.close()
 
 def test_reconciliation_exact_match(processed_statement_id):
     db = SessionLocal()
