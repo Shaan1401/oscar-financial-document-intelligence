@@ -75,7 +75,7 @@ export const StatementDetails: React.FC = () => {
 
   if (error || !data) {
     return (
-      <div className="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900 my-12">
+      <div className="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-navy-800 dark:bg-navy-900 my-12">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400 mb-4">
           <AlertTriangle className="h-6 w-6" />
         </div>
@@ -113,7 +113,7 @@ export const StatementDetails: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Top Bar Navigation & Actions */}
-      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center border-b border-slate-200 pb-4 dark:border-slate-800">
+      <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center border-b border-slate-200 pb-4 dark:border-navy-800">
         <div className="flex items-center space-x-3">
           <Link
             to="/statements"
@@ -164,7 +164,7 @@ export const StatementDetails: React.FC = () => {
       </div>
 
       {/* Account Details & Reconciliation Summary Strip */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6 rounded-xl border border-slate-200 bg-white p-3.5 text-xs shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6 rounded-xl border border-slate-200 bg-white p-3.5 text-xs shadow-sm dark:border-navy-800 dark:bg-navy-900">
         <div>
           <span className="text-slate-400 text-[10px]">Bank Name</span>
           <p className="font-semibold text-slate-900 dark:text-white truncate">{statement.bank_name || 'Generic Bank'}</p>
@@ -218,9 +218,9 @@ export const StatementDetails: React.FC = () => {
       </div>
 
       {/* 4-Step Verification Chain */}
-      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-sm dark:border-slate-800/90 dark:bg-slate-900">
+      <div className="rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
-          <span className="font-bold text-slate-800 dark:text-slate-200">End-to-End Evidence Governance Trace</span>
+          <span className="font-bold text-slate-800 dark:text-[#F4F1E9]">End-to-End Evidence Governance Trace</span>
           <span className="font-mono text-[10px]">Row #{selectedTxn?.row_sequence ?? 1}</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs">
@@ -246,9 +246,9 @@ export const StatementDetails: React.FC = () => {
       {/* Split-Screen Evidence Viewer */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
         {/* Left Panel: PDF Page Renderer */}
-        <div className="lg:col-span-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between">
+        <div className="lg:col-span-5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-navy-800 dark:bg-navy-900 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-navy-800">
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 flex items-center space-x-1.5">
                 <Eye className="h-4 w-4 text-brand-600" />
                 <span>Original Document Evidence</span>
@@ -275,7 +275,7 @@ export const StatementDetails: React.FC = () => {
             </div>
 
             {/* Document Preview Image with Traceability Highlighting Overlay */}
-            <div className="mt-3 flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 p-2 dark:border-slate-800 dark:bg-slate-950/50 overflow-hidden min-h-[420px]">
+            <div className="mt-3 flex items-center justify-center rounded-lg border border-slate-200 bg-[#FDFBF7] p-2 dark:border-navy-700 dark:bg-navy-950/60 overflow-hidden min-h-[420px]">
               <div className="relative inline-block">
                 <img
                   src={api.getPagePreviewUrl(statement.id, currentPage)}
@@ -304,8 +304,8 @@ export const StatementDetails: React.FC = () => {
 
         {/* Right Panel: Extracted Transactions Table & Traceability */}
         <div className="lg:col-span-7 flex flex-col space-y-3">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-slate-800">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 dark:border-navy-800">
               <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                 Extracted Transactions ({transactions.length})
               </span>
@@ -327,7 +327,7 @@ export const StatementDetails: React.FC = () => {
             ) : (
               <div className="max-h-[380px] overflow-y-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="sticky top-0 bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                  <thead className="sticky top-0 bg-slate-50/80 text-slate-700 dark:bg-navy-800 dark:text-[#9BA8BA]">
                     <tr>
                       <th className="px-3 py-2 font-semibold">#</th>
                       <th className="px-3 py-2 font-semibold">Date</th>
@@ -338,7 +338,7 @@ export const StatementDetails: React.FC = () => {
                       <th className="px-3 py-2 font-semibold">Method</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
                     {transactions.map((t) => {
                       const isSelected = t.id === selectedTxnId;
                       return (
@@ -350,8 +350,8 @@ export const StatementDetails: React.FC = () => {
                           }}
                           className={`cursor-pointer transition-colors ${
                             isSelected
-                              ? 'bg-brand-50/80 font-medium dark:bg-brand-950/50'
-                              : 'hover:bg-slate-50/60 dark:hover:bg-slate-800/40'
+                              ? 'bg-gold-400/10 dark:bg-gold-400/15 border-l-2 border-gold-400 font-semibold text-slate-900 dark:text-gold-300'
+                              : 'hover:bg-slate-50/60 dark:hover:bg-navy-800/40'
                           }`}
                         >
                           <td className="px-3 py-2 font-mono text-slate-400">{t.row_sequence}</td>
@@ -366,7 +366,7 @@ export const StatementDetails: React.FC = () => {
                             {t.credit > 0 ? `₹ ${t.credit.toFixed(2)}` : '-'}
                           </td>
                           <td className="px-3 py-2 whitespace-nowrap">
-                            <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                            <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-navy-800 dark:text-slate-300">
                               {t.category}
                             </span>
                           </td>
@@ -394,16 +394,16 @@ export const StatementDetails: React.FC = () => {
 
           {/* Selected Transaction Traceability & Evidence Inspector */}
           {selectedTxn && (
-            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 text-xs space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5 dark:border-slate-800">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-navy-800 dark:bg-navy-900 text-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2.5 dark:border-navy-800">
                 <div className="flex items-center space-x-2">
-                  <Crosshair className="h-4 w-4 text-brand-600" />
-                  <span className="font-bold text-slate-900 dark:text-white">
+                  <Crosshair className="h-4 w-4 text-gold-500" />
+                  <span className="font-bold text-slate-900 dark:text-[#F4F1E9]">
                     Evidence Inspector & Traceability (Row #{selectedTxn.row_sequence})
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-mono text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                  <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-mono text-slate-600 dark:bg-navy-800 dark:text-slate-300">
                     Source Page: {selectedTxn.source_page}
                   </span>
                   <span className="rounded bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
@@ -424,7 +424,7 @@ export const StatementDetails: React.FC = () => {
               </div>
 
               {/* Source Coordinates Reliability Strip */}
-              <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-1.5 font-mono text-[11px] text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+              <div className="flex items-center justify-between rounded-lg bg-[#FDFBF7] px-3 py-1.5 font-mono text-[11px] text-slate-700 dark:bg-navy-800/80 dark:text-[#9BA8BA] border border-slate-200/60 dark:border-navy-700/60">
                 <span className="flex items-center space-x-1.5">
                   <span className={`h-2 w-2 rounded-full ${bboxInfo ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                   <span className="text-slate-400">PDF Geometry:</span>
@@ -436,7 +436,7 @@ export const StatementDetails: React.FC = () => {
               </div>
 
               {/* Extracted Fields Summary */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 rounded-lg border border-slate-100 bg-slate-50/50 p-2.5 dark:border-slate-800/80 dark:bg-slate-950/40">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 rounded-lg border border-slate-200/80 bg-[#FDFBF7] p-2.5 dark:border-navy-700/80 dark:bg-navy-950/40">
                 <div>
                   <span className="text-[10px] text-slate-400">Extracted Date</span>
                   <p className="font-mono font-medium text-slate-800 dark:text-slate-200">{selectedTxn.date}</p>
@@ -465,13 +465,13 @@ export const StatementDetails: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <span className="text-slate-400 text-[10px] font-medium">Source Document Narration (Raw Text)</span>
-                  <p className="font-mono text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700 mt-0.5 break-all select-all">
+                  <p className="font-mono text-slate-800 dark:text-slate-200 bg-[#FDFBF7] dark:bg-navy-800/60 p-2.5 rounded border border-slate-200 dark:border-navy-700 mt-0.5 break-all select-all">
                     {selectedTxn.raw_description || selectedTxn.description}
                   </p>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] font-medium">Explainable Classification Rationale</span>
-                  <div className="bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded border border-slate-200 dark:border-slate-700 mt-0.5 space-y-1">
+                  <div className="bg-[#FDFBF7] dark:bg-navy-800/60 p-2.5 rounded border border-slate-200 dark:border-navy-700 mt-0.5 space-y-1">
                     <p className="text-slate-800 dark:text-slate-200 font-medium">
                       {selectedTxn.classification_reason || 'Standard hybrid classification'}
                     </p>

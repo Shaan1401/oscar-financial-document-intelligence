@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, ChevronLeft, ChevronRight, Download, ExternalLink } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, Download, ExternalLink, X } from 'lucide-react';
 import { api } from '../services/api';
 import { Transaction } from '../types';
 
@@ -51,8 +51,8 @@ export const TransactionExplorer: React.FC = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-slate-700 dark:bg-slate-800">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 rounded-xl border border-slate-200/90 bg-white p-3.5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+        <div className="relative flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-navy-700 dark:bg-navy-950/80">
           <Search className="h-4 w-4 text-slate-400 mr-2 shrink-0" />
           <input
             type="text"
@@ -62,8 +62,20 @@ export const TransactionExplorer: React.FC = () => {
               setPage(1);
             }}
             placeholder="Search description, merchant..."
-            className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none dark:text-white"
+            className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none dark:text-[#F4F1E9]"
           />
+          {search && (
+            <button
+              onClick={() => {
+                setSearch('');
+                setPage(1);
+              }}
+              title="Clear search"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-1"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
         </div>
 
         <select
@@ -72,7 +84,7 @@ export const TransactionExplorer: React.FC = () => {
             setCategory(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-navy-700 dark:bg-navy-950/80 dark:text-slate-300 cursor-pointer"
         >
           <option value="">All Categories</option>
           <option value="Salary & Income">Salary & Income</option>
@@ -103,7 +115,7 @@ export const TransactionExplorer: React.FC = () => {
             setMethod(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-navy-700 dark:bg-navy-950/80 dark:text-slate-300 cursor-pointer"
         >
           <option value="">All Classification Methods</option>
           <option value="RULE_BASED">Rule Engine (Heuristics)</option>
@@ -118,7 +130,7 @@ export const TransactionExplorer: React.FC = () => {
             setReviewStatus(e.target.value);
             setPage(1);
           }}
-          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 focus:outline-none dark:border-navy-700 dark:bg-navy-950/80 dark:text-slate-300 cursor-pointer"
         >
           <option value="">All Review Statuses</option>
           <option value="APPROVED">Approved</option>
@@ -128,19 +140,19 @@ export const TransactionExplorer: React.FC = () => {
       </div>
 
       {/* Transactions Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+      <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
         {loading ? (
           <div className="flex h-64 items-center justify-center">
-            <div className="h-7 w-7 animate-spin rounded-full border-4 border-brand-600 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold-500 border-t-transparent" />
           </div>
         ) : transactions.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">
+          <div className="p-12 text-center text-xs text-slate-500 dark:text-[#9BA8BA]">
             No transactions match the selected criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[850px]">
-              <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
+              <thead className="bg-slate-50/80 text-slate-700 dark:bg-navy-800/80 dark:text-[#9BA8BA]">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Date</th>
                   <th className="px-4 py-3 font-semibold">Description</th>
@@ -153,9 +165,9 @@ export const TransactionExplorer: React.FC = () => {
                   <th className="px-4 py-3 font-semibold text-right">Statement</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
                 {transactions.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-navy-800/40">
                     <td className="px-4 py-3 whitespace-nowrap font-mono">{t.date}</td>
                     <td className="px-4 py-3 max-w-[280px]" title={t.raw_description}>
                       <p className="truncate font-medium text-slate-900 dark:text-white">{t.description}</p>

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 import { Statement, ReconciliationResult } from '../types';
+import { SearchableSelect } from '../components/Common/SearchableSelect';
 
 export const ReconciliationCentre: React.FC = () => {
   const { id: paramId } = useParams<{ id?: string }>();
@@ -99,18 +100,20 @@ export const ReconciliationCentre: React.FC = () => {
 
         {/* Statement Selector Dropdown & Recalculate CTA */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full sm:w-auto">
-          <select
+          <SearchableSelect
+            options={statements.map((s) => ({
+              value: s.id,
+              label: s.filename,
+              sublabel: `${s.bank_name || 'Bank'} (${s.transaction_count ?? 0} txns)`,
+              badge: s.reconciliation_status,
+            }))}
             value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
+            onChange={(val) => setSelectedId(val)}
+            placeholder="Select Statement..."
+            searchPlaceholder="Search statements by name or bank..."
             aria-label="Select Statement"
-            className="w-full sm:w-auto rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-900 shadow-sm focus:outline-none focus:ring-1 focus:ring-gold-500 dark:border-navy-700 dark:bg-navy-900 dark:text-[#F4F1E9]"
-          >
-            {statements.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.filename} ({s.bank_name || 'Bank'})
-              </option>
-            ))}
-          </select>
+            className="w-full sm:w-80"
+          />
 
           {/* Real Backend Recalculate Button with Explicit State Management */}
           <button
@@ -172,7 +175,7 @@ export const ReconciliationCentre: React.FC = () => {
               Core Accounting Reconciliation Law
             </span>
             <div className="mt-3 flex flex-wrap items-center gap-2.5 text-sm font-semibold text-slate-800 dark:text-[#F4F1E9]">
-              <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-slate-800 dark:bg-navy-800 dark:text-slate-200 border border-slate-200 dark:border-navy-700">
+              <span className="rounded-lg bg-white px-3 py-1.5 text-slate-800 border border-slate-200 dark:bg-navy-800 dark:text-slate-200 dark:border-navy-700">
                 Opening Balance
               </span>
               <span className="text-emerald-500 font-bold text-base">+</span>
@@ -184,8 +187,8 @@ export const ReconciliationCentre: React.FC = () => {
                 Total Debits
               </span>
               <span className="text-slate-400 font-bold text-base">=</span>
-              <span className="rounded-lg bg-navy-900 px-3.5 py-1.5 text-gold-400 font-bold border border-gold-500/40 shadow-sm">
-                = Expected Closing Balance
+              <span className="rounded-lg bg-[#FDFBF7] px-3.5 py-1.5 text-navy-950 font-bold border border-gold-400/60 shadow-sm dark:bg-navy-900 dark:text-gold-400 dark:border-gold-500/40">
+                Expected Closing Balance
               </span>
             </div>
           </div>
@@ -201,7 +204,7 @@ export const ReconciliationCentre: React.FC = () => {
             </div>
 
             <div className="rounded-xl border border-emerald-200/80 bg-white p-4 shadow-sm dark:border-emerald-900/50 dark:bg-navy-900 flex flex-col justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">+ Total Credits</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">Total Credits</span>
               <p className="mt-2 text-2xl font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
                 ₹ {result.total_credits.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </p>
@@ -209,24 +212,24 @@ export const ReconciliationCentre: React.FC = () => {
             </div>
 
             <div className="rounded-xl border border-rose-200/80 bg-white p-4 shadow-sm dark:border-rose-900/50 dark:bg-navy-900 flex flex-col justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-400">- Total Debits</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-400">Total Debits</span>
               <p className="mt-2 text-2xl font-bold tabular-nums text-rose-600 dark:text-rose-400">
                 ₹ {result.total_debits.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </p>
               <span className="text-xs text-rose-600/80 dark:text-rose-400/80 mt-1 block">Outflows</span>
             </div>
 
-            {/* Expected Closing Card — Dark Navy Elevated Surface with Champagne Gold */}
-            <div className="rounded-xl border border-gold-500/40 bg-navy-900 p-4 shadow-sm text-gold-400 flex flex-col justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-gold-300">= Expected Closing</span>
-              <p className="mt-2 text-2xl font-bold tabular-nums text-gold-400">
+            {/* Expected Closing Card — Theme-Aware Surface */}
+            <div className="rounded-xl border border-gold-400/60 bg-[#FDFBF7] p-4 shadow-sm text-navy-950 dark:border-gold-500/40 dark:bg-navy-900 dark:text-gold-400 flex flex-col justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-gold-800 dark:text-gold-300">Expected Closing Balance</span>
+              <p className="mt-2 text-2xl font-bold tabular-nums text-navy-950 dark:text-gold-400">
                 ₹ {result.expected_closing_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </p>
-              <span className="text-xs text-gold-400/80 mt-1 block">Calculated Result</span>
+              <span className="text-xs text-slate-600 dark:text-gold-400/80 mt-1 block">Calculated Balance</span>
             </div>
 
             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-navy-800 dark:bg-navy-900 flex flex-col justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#9BA8BA]">Document Closing</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-[#9BA8BA]">Document Closing Balance</span>
               <p className="mt-2 text-2xl font-bold tabular-nums text-slate-900 dark:text-[#F4F1E9]">
                 ₹ {result.actual_closing_balance.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </p>

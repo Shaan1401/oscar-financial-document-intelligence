@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   AlertCircle,
   CheckCircle2,
@@ -24,6 +24,7 @@ export const ReviewExceptions: React.FC = () => {
   const [newCredit, setNewCredit] = useState<string>('');
   const [reason, setReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [search, setSearch] = useState('');
 
   const loadQueue = () => {
     setLoading(true);
@@ -36,6 +37,18 @@ export const ReviewExceptions: React.FC = () => {
   useEffect(() => {
     loadQueue();
   }, []);
+
+  const filteredItems = useMemo(() => {
+    if (!search.trim()) return items;
+    const q = search.toLowerCase().trim();
+    return items.filter((t) => {
+      const descMatch = t.description?.toLowerCase().includes(q);
+      const catMatch = t.category?.toLowerCase().includes(q);
+      const flagMatch = (t.validation_warnings || t.classification_reason)?.toLowerCase().includes(q);
+      const methodMatch = t.classification_method?.toLowerCase().includes(q);
+      return descMatch || catMatch || flagMatch || methodMatch;
+    });
+  }, [items, search]);
 
   const handleApprove = async (id: number) => {
     try {
@@ -89,16 +102,34 @@ export const ReviewExceptions: React.FC = () => {
 
       {/* Queue Table */}
       <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
-        <div className="border-b border-slate-100 px-5 py-3.5 dark:border-navy-800 flex items-center justify-between">
+        {/* Search & Header Control Strip */}
+        <div className="border-b border-slate-100 px-5 py-3 dark:border-navy-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
-            <AlertCircle className="h-4 w-4 text-amber-500" />
+            <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
             <span className="text-sm font-semibold text-slate-900 dark:text-[#F4F1E9]">
-              Pending Exceptions ({items.length})
+              Pending Exceptions ({filteredItems.length}{search ? ` of ${items.length}` : ''})
             </span>
           </div>
-          <span className="text-xs text-slate-500 dark:text-[#9BA8BA]">
-            Transactions with rule conflicts, low ML confidence, or anomaly indicators
-          </span>
+
+          <div className="relative w-full sm:w-80">
+            <Search className="pointer-events-none absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search description, category, reason..."
+              className="w-full rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-7 text-xs text-slate-900 placeholder:text-slate-400 focus:border-gold-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-gold-500 dark:border-navy-700 dark:bg-navy-950/80 dark:text-[#F4F1E9] dark:placeholder:text-slate-500 dark:focus:bg-navy-900"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
@@ -110,6 +141,17 @@ export const ReviewExceptions: React.FC = () => {
             <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-500 mb-2" />
             <p className="font-semibold text-slate-800 dark:text-slate-200">All exceptions resolved!</p>
             <p className="mt-0.5">There are currently no transactions requiring human review.</p>
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="p-12 text-center text-xs text-slate-500 dark:text-[#9BA8BA] space-y-2">
+            <p className="text-sm font-semibold text-slate-800 dark:text-[#F4F1E9]">No matching exceptions found</p>
+            <p className="text-slate-400">No transactions match your search filter "{search}".</p>
+            <button
+              onClick={() => setSearch('')}
+              className="mt-2 inline-flex items-center space-x-1 rounded-lg bg-gold-400 px-3 py-1.5 text-xs font-bold text-navy-950 hover:bg-gold-500 transition-colors"
+            >
+              <span>Clear Search</span>
+            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -125,7 +167,7 @@ export const ReviewExceptions: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
-                {items.map((t) => (
+                {filteredItems.map((t) => (
                   <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-navy-800/40">
                     <td className="px-4 py-3 min-w-[200px] max-w-[300px]">
                       <span className="text-slate-400 dark:text-[#9BA8BA] block text-xs">{t.date}</span>

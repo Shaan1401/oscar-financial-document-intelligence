@@ -82,7 +82,7 @@ export const ClassificationInsights: React.FC = () => {
       </div>
 
       {/* Explainable Hybrid Classification Guarantee Banner */}
-      <div className="rounded-xl border border-gold-400/30 bg-gold-50/50 p-5 dark:border-navy-700 dark:bg-navy-900/90 shadow-sm">
+      <div className="rounded-xl border border-gold-400/50 bg-[#FDFBF7] p-5 dark:border-navy-700 dark:bg-navy-900 shadow-sm">
         <div className="flex items-start space-x-3.5">
           <ShieldCheck className="h-6 w-6 text-gold-500 shrink-0 mt-0.5" />
           <div className="space-y-1.5 text-sm">
@@ -135,18 +135,18 @@ export const ClassificationInsights: React.FC = () => {
 
       {/* Threshold Analysis Table */}
       {metrics?.threshold_analysis && (
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-          <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+        <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
+          <div className="border-b border-slate-100 px-4 py-3 dark:border-navy-800">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-[#F4F1E9]">
               Validation Threshold Selection Curve
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500 dark:text-[#9BA8BA]">
               Evaluated on the validation split to select optimal review cutoff (chosen threshold: 0.65)
             </p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
+              <thead className="bg-slate-50/80 text-slate-700 dark:bg-navy-800/80 dark:text-[#9BA8BA]">
                 <tr>
                   <th className="px-4 py-2.5 font-semibold">Threshold (τ)</th>
                   <th className="px-4 py-2.5 font-semibold">Coverage Rate</th>
@@ -154,22 +154,22 @@ export const ClassificationInsights: React.FC = () => {
                   <th className="px-4 py-2.5 font-semibold">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
                 {metrics.threshold_analysis.map((th: any) => (
                   <tr
                     key={th.threshold}
-                    className={th.threshold === 0.65 ? 'bg-brand-50/70 font-semibold dark:bg-brand-950/40' : ''}
+                    className={th.threshold === 0.65 ? 'bg-gold-400/10 dark:bg-gold-400/15 border-l-4 border-gold-400 font-bold text-navy-950 dark:text-gold-300' : ''}
                   >
                     <td className="px-4 py-2 font-mono">{th.threshold.toFixed(2)}</td>
                     <td className="px-4 py-2 font-mono">{(th.coverage * 100).toFixed(1)}%</td>
-                    <td className="px-4 py-2 font-mono text-emerald-600">{(th.accuracy_on_accepted * 100).toFixed(1)}%</td>
+                    <td className="px-4 py-2 font-mono text-emerald-600 dark:text-emerald-400">{(th.accuracy_on_accepted * 100).toFixed(1)}%</td>
                     <td className="px-4 py-2">
                       {th.threshold === 0.65 ? (
-                        <span className="rounded bg-brand-600 px-2 py-0.5 text-[10px] font-bold text-white">
-                          Selected Cutoff
+                        <span className="rounded bg-navy-900 dark:bg-gold-500 text-gold-400 dark:text-navy-950 px-2 py-0.5 text-[10px] font-bold">
+                          Selected Cutoff (τ = 0.65)
                         </span>
                       ) : (
-                        <span className="text-slate-400">Candidate</span>
+                        <span className="text-slate-400 dark:text-slate-500">Candidate</span>
                       )}
                     </td>
                   </tr>
@@ -181,18 +181,18 @@ export const ClassificationInsights: React.FC = () => {
       )}
 
       {/* Configured Rule Engine Rules Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-        <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-800">
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+      <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
+        <div className="border-b border-slate-100 px-4 py-3 dark:border-navy-800">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-[#F4F1E9]">
             Active Deterministic Heuristic Rules ({rulesData.length})
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-500 dark:text-[#9BA8BA]">
             Tier-1 priority patterns evaluated before calling traditional ML
           </p>
         </div>
         <div className="max-h-80 overflow-y-auto">
           <table className="w-full text-left text-xs">
-            <thead className="sticky top-0 bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+            <thead className="sticky top-0 bg-slate-50/80 text-slate-700 dark:bg-navy-800 dark:text-[#9BA8BA]">
               <tr>
                 <th className="px-4 py-2.5 font-semibold">Rule ID</th>
                 <th className="px-4 py-2.5 font-semibold">Priority</th>
@@ -201,16 +201,16 @@ export const ClassificationInsights: React.FC = () => {
                 <th className="px-4 py-2.5 font-semibold">Explanation</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
               {rulesData.map((r: any) => (
-                <tr key={r.rule_id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                  <td className="px-4 py-2 font-mono font-semibold text-brand-600 dark:text-brand-400">
+                <tr key={r.rule_id} className="hover:bg-slate-50/60 dark:hover:bg-navy-800/50">
+                  <td className="px-4 py-2 font-mono font-semibold text-gold-600 dark:text-gold-400">
                     {r.rule_id}
                   </td>
                   <td className="px-4 py-2 font-mono font-bold text-slate-700 dark:text-slate-300">
                     {r.priority}
                   </td>
-                  <td className="px-4 py-2 font-medium">{r.category}</td>
+                  <td className="px-4 py-2 font-medium text-slate-900 dark:text-[#F4F1E9]">{r.category}</td>
                   <td className="px-4 py-2 font-mono text-[11px] text-slate-600 dark:text-slate-400 max-w-[240px] truncate" title={r.pattern}>
                     {r.pattern}
                   </td>

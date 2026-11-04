@@ -10,6 +10,7 @@ import {
   UploadCloud,
   CheckCircle2,
   AlertTriangle,
+  X,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { Statement } from '../types';
@@ -73,34 +74,43 @@ export const StatementHistory: React.FC = () => {
       </div>
 
       {/* Search Filter Bar */}
-      <div className="flex items-center rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm dark:border-slate-800 dark:bg-slate-900 max-w-md">
+      <div className="flex items-center rounded-lg border border-slate-200/90 bg-white px-3 py-2 shadow-sm dark:border-navy-800 dark:bg-navy-900 max-w-md">
         <Search className="h-4 w-4 text-slate-400 mr-2 shrink-0" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Filter by filename, bank, or status..."
-          className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none dark:text-white"
+          className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none dark:text-[#F4F1E9]"
         />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            title="Clear search"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-1"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Statements Table */}
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+      <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
         {loading ? (
           <div className="flex h-64 items-center justify-center">
-            <div className="h-7 w-7 animate-spin rounded-full border-4 border-brand-600 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-gold-500 border-t-transparent" />
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500 dark:text-slate-400">
+          <div className="p-12 text-center text-xs text-slate-500 dark:text-[#9BA8BA]">
             No matching bank statements found.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs min-w-[720px]">
-              <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
+              <thead className="bg-slate-50/80 text-slate-700 dark:bg-navy-800/80 dark:text-[#9BA8BA]">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Document</th>
-                  <th className="px-4 py-3 font-semibold">Bank & Period</th>
+                  <th className="px-4 py-3 font-semibold">Bank &amp; Period</th>
                   <th className="px-4 py-3 font-semibold">Pages / Layout</th>
                   <th className="px-4 py-3 font-semibold">Transactions</th>
                   <th className="px-4 py-3 font-semibold">Total Debits / Credits</th>
@@ -108,9 +118,9 @@ export const StatementHistory: React.FC = () => {
                   <th className="px-4 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100 dark:divide-navy-800">
                 {filtered.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
+                  <tr key={s.id} className="hover:bg-slate-50/60 dark:hover:bg-navy-800/40">
                     <td className="px-4 py-3">
                       <Link to={`/statements/${s.id}`} className="font-semibold text-brand-600 hover:underline dark:text-brand-400">
                         {s.filename}

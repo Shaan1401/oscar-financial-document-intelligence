@@ -45,6 +45,7 @@ import {
   ActivityHeatmapPoint,
   ClassificationDeepResponse,
 } from '../types';
+import { SearchableSelect } from '../components/Common/SearchableSelect';
 
 export const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -129,18 +130,23 @@ export const Dashboard: React.FC = () => {
               <span className="text-xs font-semibold text-slate-500 dark:text-[#9BA8BA] whitespace-nowrap">
                 Scope:
               </span>
-              <select
+              <SearchableSelect
+                options={[
+                  { value: '', label: 'All Processed Statements (Portfolio)' },
+                  ...statements.map((s) => ({
+                    value: s.id,
+                    label: s.filename,
+                    sublabel: `${s.bank_name || 'Bank'} (${s.transaction_count} txns)`,
+                    badge: s.reconciliation_status,
+                  })),
+                ]}
                 value={selectedStatementId}
-                onChange={(e) => setSelectedStatementId(e.target.value)}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-800 shadow-sm focus:outline-none focus:ring-1 focus:ring-gold-400 dark:border-navy-700 dark:bg-navy-800 dark:text-[#F4F1E9] cursor-pointer"
-              >
-                <option value="">All Processed Statements (Portfolio)</option>
-                {statements.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.filename} — {s.bank_name || 'Bank'} ({s.transaction_count} txns)
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setSelectedStatementId(val)}
+                placeholder="Select Scope..."
+                searchPlaceholder="Search statements or portfolio..."
+                aria-label="Statement Scope"
+                className="w-72 sm:w-80"
+              />
             </div>
           )}
 
@@ -297,7 +303,7 @@ export const Dashboard: React.FC = () => {
 
             {/* Mathematical Flow Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-4 text-center">
-              <div className="rounded-lg bg-slate-50 p-3.5 dark:bg-navy-800/80 border border-slate-200/60 dark:border-navy-700/60 flex flex-col justify-between">
+              <div className="rounded-lg bg-white p-3.5 dark:bg-navy-800/80 border border-slate-200/80 dark:border-navy-700/60 flex flex-col justify-between">
                 <span className="text-xs font-semibold text-slate-500 dark:text-[#9BA8BA] uppercase tracking-wider">Opening Balance</span>
                 <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-[#F4F1E9] tabular-nums">
                   ₹ {openingBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -306,27 +312,27 @@ export const Dashboard: React.FC = () => {
               </div>
 
               <div className="rounded-lg bg-emerald-50/70 p-3.5 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-800/50 flex flex-col justify-between">
-                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">+ Capital Inflows</span>
+                <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider">Total Credits</span>
                 <p className="mt-1 text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
-                  + ₹ {totalInflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ₹ {totalInflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
                 <span className="text-xs text-emerald-600/80 dark:text-emerald-400/80">Total Verified Credits</span>
               </div>
 
               <div className="rounded-lg bg-rose-50/70 p-3.5 dark:bg-rose-950/30 border border-rose-200/70 dark:border-rose-800/50 flex flex-col justify-between">
-                <span className="text-xs font-semibold text-rose-700 dark:text-rose-300 uppercase tracking-wider">- Capital Outflows</span>
+                <span className="text-xs font-semibold text-rose-700 dark:text-rose-300 uppercase tracking-wider">Total Debits</span>
                 <p className="mt-1 text-2xl font-bold text-rose-600 dark:text-rose-400 tabular-nums">
-                  - ₹ {totalOutflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  ₹ {totalOutflow.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
                 <span className="text-xs text-rose-600/80 dark:text-rose-400/80">Total Verified Debits</span>
               </div>
 
-              <div className="rounded-lg bg-navy-900 p-3.5 border border-gold-500/40 text-gold-400 shadow-sm flex flex-col justify-between">
-                <span className="text-xs font-bold text-gold-300 uppercase tracking-wider">= Expected Closing</span>
-                <p className="mt-1 text-2xl font-bold text-gold-400 tabular-nums">
-                  = ₹ {expectedClosing.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <div className="rounded-lg border border-gold-400/60 bg-[#FDFBF7] p-3.5 text-navy-950 shadow-sm dark:border-gold-500/40 dark:bg-navy-900 dark:text-gold-400 flex flex-col justify-between">
+                <span className="text-xs font-bold text-gold-800 dark:text-gold-300 uppercase tracking-wider">Expected Closing Balance</span>
+                <p className="mt-1 text-2xl font-bold text-navy-950 dark:text-gold-400 tabular-nums">
+                  ₹ {expectedClosing.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-xs text-gold-400/80">Calculated Balance</span>
+                <span className="text-xs text-slate-600 dark:text-gold-400/80">Calculated Balance</span>
               </div>
 
               <div className={`rounded-lg p-3.5 border flex flex-col justify-between ${
@@ -335,7 +341,7 @@ export const Dashboard: React.FC = () => {
                   : 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-800'
               }`}>
                 <span className="text-xs font-bold uppercase tracking-wider">
-                  {isBridgeReconciled ? 'Actual Closing (Reconciled)' : 'Closing Mismatch'}
+                  Document Closing Balance
                 </span>
                 <p className="mt-1 text-2xl font-bold tabular-nums">
                   ₹ {closingBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
