@@ -11,7 +11,7 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white dark:bg-slate-950 dark:text-slate-100;
+    @apply bg-[#F9F9FB] text-slate-900 antialiased selection:bg-gold-400 selection:text-navy-950 dark:bg-navy-950 dark:text-[#F4F1E9];
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
@@ -32,31 +32,31 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full dark:bg-slate-700;
+  @apply bg-slate-300 rounded-full dark:bg-navy-700;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-slate-400 dark:bg-slate-600;
+  @apply bg-slate-400 dark:bg-navy-600;
 }
 
 /* Workstation Glass & Surface Elevations */
 .oscar-card {
-  @apply rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm transition-all duration-200 hover:border-slate-300 dark:border-slate-800/90 dark:bg-slate-900 dark:hover:border-slate-700;
+  @apply rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm transition-all duration-200 hover:border-slate-300 dark:border-navy-700 dark:bg-navy-900 dark:hover:border-navy-600;
 }
 
 .oscar-card-header {
-  @apply flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800/80;
+  @apply flex items-center justify-between border-b border-slate-100 pb-3 dark:border-navy-800;
 }
 
 /* Glowing animation for active evidence coordinates */
 @keyframes oscar-pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(37, 99, 235, 0.45);
-    border-color: rgba(37, 99, 235, 0.9);
+    box-shadow: 0 0 10px rgba(214, 179, 106, 0.45);
+    border-color: rgba(214, 179, 106, 0.9);
   }
   50% {
-    box-shadow: 0 0 18px rgba(37, 99, 235, 0.7);
-    border-color: rgba(96, 165, 250, 1);
+    box-shadow: 0 0 18px rgba(214, 179, 106, 0.7);
+    border-color: rgba(245, 238, 220, 1);
   }
 }
 

@@ -48,6 +48,7 @@ Desktop.ini
 
 # Logs & Temporary files
 *.log
+.chrome_temp/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

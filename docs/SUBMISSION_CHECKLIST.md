@@ -29,6 +29,9 @@
 | **Exports** | Multi-tab Excel (.xlsx) Export | **PASS** | openpyxl workbook with Transactions, Account, Reconciliation, Audit tabs |
 | **Exports** | CSV Export | **PASS** | Standard CSV with formula injection protection |
 | **UI/UX** | Dark and Light Theme Persistence | **PASS** | Instant toggle with local storage persistence |
-| **Verification** | Backend Automated Tests | **PASS** | 36/36 tests passing in pytest (100% pass rate in ~10.7s) |
+| **Verification** | Backend Automated Tests | **PASS** | 36/36 tests passing in pytest (100% pass rate in ~14.4s) |
 | **Verification** | Frontend TypeScript & Build | **PASS** | `tsc -b && vite build` passing with exit code 0 |
-| **Artifacts** | High-Resolution Screenshots | **PASS** | 13 genuine screenshots in `screenshots/` (Light & Dark modes) |
+| **Artifacts** | High-Resolution Screenshots | **PASS** | 14 genuine screenshots in `screenshots/` and `docs/screenshots/` (Light & Dark modes) |
+| **Reports** | Requirements Traceability | **PASS** | `docs/REQUIREMENTS_TRACEABILITY.md` (9 Befree requirements fully traced) |
+| **Reports** | Extraction Evaluation Benchmark | **PASS** | `docs/EXTRACTION_EVALUATION_REPORT.md` (100% precision & recall across Layouts A, B, C) |
+| **Reports** | ML Leakage Audit & Evaluation | **PASS** | `docs/ML_EVALUATION_REPORT.md` (0.00% leakage, 100% test accuracy, $T=0.65$ gating) |

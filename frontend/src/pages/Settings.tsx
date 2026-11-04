@@ -169,7 +169,7 @@ export const Settings: React.FC = () => {
             onClick={() => setTheme('light')}
             className={`flex items-center justify-center space-x-2 rounded-lg border p-3 text-xs font-bold transition cursor-pointer ${
               theme === 'light'
-                ? 'border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/60 shadow-xs'
+                ? 'border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/60 shadow-sm'
                 : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
             }`}
           >
@@ -181,7 +181,7 @@ export const Settings: React.FC = () => {
             onClick={() => setTheme('dark')}
             className={`flex items-center justify-center space-x-2 rounded-lg border p-3 text-xs font-bold transition cursor-pointer ${
               theme === 'dark'
-                ? 'border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 shadow-xs'
+                ? 'border-brand-600 bg-brand-50 text-brand-700 dark:bg-brand-950/60 dark:text-brand-300 shadow-sm'
                 : 'border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300'
             }`}
           >
