@@ -1,0 +1,114 @@
+{
+  "metadata": {
+    "bank_name": "OSCAR Commercial Bank",
+    "account_holder": "Priya Sundaram",
+    "account_number": "918020045678912",
+    "ifsc_code": "OCBL0004567",
+    "branch": "Indiranagar, Bengaluru",
+    "statement_period": "01/10/2026 to 15/10/2026",
+    "opening_balance": 72500.0,
+    "closing_balance": 130658.0,
+    "total_debits": 55341.0,
+    "total_credits": 113499.0,
+    "transaction_count": 12,
+    "layout": "Layout B - Combined Amount with DR/CR Indicators"
+  },
+  "transactions": [
+    {
+      "sequence": 1,
+      "date": "01/10/2026",
+      "description": "NEFT CR-INFOSYS BPO TECH CONSULTING-SALARY",
+      "debit": 0.0,
+      "credit": 110000.0,
+      "balance": 182500.0
+    },
+    {
+      "sequence": 2,
+      "date": "02/10/2026",
+      "description": "UPI-SWIGGY FOOD DELIVERY-DELHI",
+      "debit": 540.0,
+      "credit": 0.0,
+      "balance": 181960.0
+    },
+    {
+      "sequence": 3,
+      "date": "03/10/2026",
+      "description": "POS DEBIT-RELIANCE SMART SUPERSTORE",
+      "debit": 4250.0,
+      "credit": 0.0,
+      "balance": 177710.0
+    },
+    {
+      "sequence": 4,
+      "date": "05/10/2026",
+      "description": "UPI-FLIPKART INTERNET PVT LTD ELECTRONICS",
+      "debit": 12999.0,
+      "credit": 0.0,
+      "balance": 164711.0
+    },
+    {
+      "sequence": 5,
+      "date": "07/10/2026",
+      "description": "BILLDESK TANGEDCO POWER ELECTRICITY BILL",
+      "debit": 2340.0,
+      "credit": 0.0,
+      "balance": 162371.0
+    },
+    {
+      "sequence": 6,
+      "date": "08/10/2026",
+      "description": "OLA CABS AUTO RIDE FARE CHARGES",
+      "debit": 285.0,
+      "credit": 0.0,
+      "balance": 162086.0
+    },
+    {
+      "sequence": 7,
+      "date": "10/10/2026",
+      "description": "UPI-APOLLO CLINIC CONSULTATION & MEDS",
+      "debit": 1250.0,
+      "credit": 0.0,
+      "balance": 160836.0
+    },
+    {
+      "sequence": 8,
+      "date": "11/10/2026",
+      "description": "ATM WDL-AXIS BANK ATM KORAMANGALA",
+      "debit": 10000.0,
+      "credit": 0.0,
+      "balance": 150836.0
+    },
+    {
+      "sequence": 9,
+      "date": "12/10/2026",
+      "description": "MONTHLY MAINTENANCE CHARGES & GST",
+      "debit": 177.0,
+      "credit": 0.0,
+      "balance": 150659.0
+    },
+    {
+      "sequence": 10,
+      "date": "13/10/2026",
+      "description": "CR-REFUND FLIPKART RETURN ORDER",
+      "debit": 0.0,
+      "credit": 3499.0,
+      "balance": 154158.0
+    },
+    {
+      "sequence": 11,
+      "date": "14/10/2026",
+      "description": "IMPS OUT-FATHER MEDICAL SUPPORT TRANSFER",
+      "debit": 15000.0,
+      "credit": 0.0,
+      "balance": 139158.0
+    },
+    {
+      "sequence": 12,
+      "date": "15/10/2026",
+      "description": "ICICI PRUDENTIAL LIFE INSURANCE PREMIUM",
+      "debit": 8500.0,
+      "credit": 0.0,
+      "balance": 130658.0
+    }
+  ]
+}

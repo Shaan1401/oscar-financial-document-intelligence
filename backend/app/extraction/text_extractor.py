@@ -3,16 +3,29 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional
 import pymupdf
 import pdfplumber
+from PIL import Image
 
 from app.validation.normalizer import FinancialNormalizer
+from app.extraction.ocr_extractor import OCRExtractor
 
 class PageContent:
-    def __init__(self, page_number: int, text: str, page_type: str, tables: List[List[List[str]]], blocks: List[Dict]):
+    def __init__(
+        self,
+        page_number: int,
+        text: str,
+        page_type: str,
+        tables: List[List[List[str]]],
+        blocks: List[Dict],
+        ocr_status: Optional[str] = None,
+        ocr_error: Optional[str] = None,
+    ):
         self.page_number = page_number
         self.text = text
         self.page_type = page_type  # text, scanned, mixed
         self.tables = tables
         self.blocks = blocks
+        self.ocr_status = ocr_status
+        self.ocr_error = ocr_error
 
 class DocumentExtractor:
     """Extracts raw text, table structures, and metadata from PDF files using PyMuPDF & pdfplumber."""
@@ -77,6 +90,24 @@ class DocumentExtractor:
             else:
                 page_type = "text"
 
+            ocr_status = None
+            ocr_error = None
+
+            # For scanned pages, attempt OCR extraction
+            if page_type == "scanned":
+                try:
+                    pix = mupdf_page.get_pixmap(dpi=200)
+                    pil_img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                    ocr_res = OCRExtractor.extract_image_text_and_blocks(pil_img)
+                    ocr_status = ocr_res.get("status")
+                    ocr_error = ocr_res.get("error")
+                    if ocr_status == "SUCCESS" and ocr_res.get("text"):
+                        raw_text = ocr_res["text"]
+                        full_text_corpus[-1] = raw_text
+                except Exception as ex:
+                    ocr_status = "FAILED"
+                    ocr_error = str(ex)
+
             # Extract blocks with coordinates for traceability
             blocks = []
             for b in mupdf_page.get_text("blocks"):
@@ -109,6 +140,8 @@ class DocumentExtractor:
                 page_type=page_type,
                 tables=tables,
                 blocks=blocks,
+                ocr_status=ocr_status,
+                ocr_error=ocr_error,
             ))
 
         doc.close()

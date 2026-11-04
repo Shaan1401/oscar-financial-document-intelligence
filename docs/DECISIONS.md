@@ -33,3 +33,26 @@ This document records key engineering choices, dependencies, and design tradeoff
 ## Decision 5: Database Architecture
 - **Context**: Local-first operation without requiring external cloud databases or Docker containers.
 - **Decision**: Use SQLite with SQLAlchemy 2 (mapped models, foreign keys, cascade deletes, indexed columns). The database file is located at `oscar.db` and is ignored by Git to preserve privacy.
+
+## Decision 6: Multi-Layout Parsing Strategy
+- **Context**: Different financial institutions structure statements differently (e.g. separate debit/credit columns vs combined amount with DR/CR indicators, wrapped narration rows, and multiline table structures).
+- **Decision**: Implemented `HeaderDetector` with extensive synonym mappings (`DATE_SYNONYMS`, `DESC_SYNONYMS`, `DEBIT_SYNONYMS`, `CREDIT_SYNONYMS`, `BALANCE_SYNONYMS`, `AMOUNT_SYNONYMS`), allowing `GenericBankParser` to dynamically adapt to varying column layouts, continuation rows, and page breaks without rigid hardcoded offsets.
+
+## Decision 7: Mathematical Reconciliation & Anomaly Identification
+- **Context**: Bank statements can contain missing rows, altered balances, or extraction artifacts.
+- **Decision**: Implement dual-level verification:
+  1. Macro reconciliation: `Variance = Actual Closing - (Opening + Total Credits - Total Debits)`.
+  2. Micro reconciliation: Consecutive running-balance validation verifying row-by-row step consistency, flagging rows with mathematical deviations as `WARNING` / `ANOMALY`.
+  3. Duplicate candidates: Identified using compound keys (`date + amount + direction + desc_prefix`) and routed to the human review queue.
+
+## Decision 8: Modern React Frontend & Zero Mock Data Principle
+- **Context**: A financial intelligence application must be trustworthy and transparent.
+- **Decision**: Build a React 19 + TypeScript frontend with Vite, Tailwind CSS, Lucide icons, and Recharts. All metrics, charts, transactions, and reviews are driven 100% by live SQLite backend APIs with zero hardcoded or mocked financial numbers, full dark/light mode toggle with localStorage persistence, and responsive desktop-first layout.
+
+## Decision 9: Split-Screen Evidence Viewer & Document Traceability
+- **Context**: Financial auditors require direct visual verification of every parsed number back to the original source document without manual cross-referencing.
+- **Decision**: Provide page-by-page high-resolution PNG rendering via PyMuPDF at 200 DPI through `/api/v1/statements/{id}/pages/{page}/preview`. Clicking any transaction row automatically scrolls and loads that transaction's corresponding source page, displaying a dedicated traceability card containing raw text, coordinates, model version/rule ID, and confidence score.
+
+## Decision 10: Headless Automated Visual Verification
+- **Context**: Proving full end-to-end frontend integration without relying on user interaction during automated evaluation.
+- **Decision**: Utilize headless Chrome to capture full-resolution 1440x900 viewport screenshots across all 11 application routes with real SQLite data, committing the resulting PNG assets to `screenshots/` for GitHub presentation.

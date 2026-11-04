@@ -6,11 +6,12 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.errors import DuplicateDocumentError, ExtractionError
-from app.database.models import Statement, Account, Transaction, AuditEvent, ProcessingJob
+from app.database.models import Statement, Account, Transaction, AuditEvent, ProcessingJob, ClassificationEvent
 from app.extraction.pdf_validator import PDFValidator
 from app.extraction.text_extractor import DocumentExtractor
 from app.bank_parsers.registry import ParserRegistry
 from app.validation.normalizer import FinancialNormalizer
+from app.classification.hybrid_classifier import HybridClassifier
 
 class StatementProcessor:
     """Orchestrates PDF ingestion, parsing, normalization, and persistence."""
@@ -88,11 +89,13 @@ class StatementProcessor:
             statement.layout_type = parser.layout_type
             parsed_txns = parser.parse(doc_data)
 
-            # 3. Normalize & Persist Transactions
+            # 3. Normalize, Classify & Persist Transactions
             total_debits = Decimal("0.00")
             total_credits = Decimal("0.00")
             first_date = None
             last_date = None
+
+            classifier = HybridClassifier()
 
             for pt in parsed_txns:
                 debit_minor = FinancialNormalizer.to_minor_units(pt.debit, statement.exponent)
@@ -106,6 +109,9 @@ class StatementProcessor:
                     first_date = pt.date
                 last_date = pt.date
 
+                # Classify transaction using Hybrid Classifier
+                cls_res = classifier.classify(pt.description)
+
                 txn = Transaction(
                     statement_id=statement.id,
                     date=pt.date,
@@ -116,6 +122,13 @@ class StatementProcessor:
                     balance_minor=balance_minor,
                     currency=statement.currency,
                     exponent=statement.exponent,
+                    category=cls_res["category"],
+                    classification_method=cls_res["classification_method"],
+                    confidence_score=cls_res["confidence_score"],
+                    classification_reason=cls_res["classification_reason"],
+                    rule_id=cls_res["rule_id"],
+                    model_version=cls_res["model_version"],
+                    review_status=cls_res["review_status"],
                     source_page=pt.source_page,
                     row_sequence=pt.row_sequence,
                     extraction_method=pt.extraction_method,
@@ -123,6 +136,19 @@ class StatementProcessor:
                     validation_warnings=pt.validation_warnings,
                 )
                 db.add(txn)
+                db.flush()
+
+                # Audit individual classification event
+                cls_event = ClassificationEvent(
+                    transaction_id=txn.id,
+                    method=cls_res["classification_method"],
+                    category=cls_res["category"],
+                    rule_id=cls_res["rule_id"],
+                    model_version=cls_res["model_version"],
+                    confidence_score=cls_res["confidence_score"],
+                    explanation=cls_res["classification_reason"],
+                )
+                db.add(cls_event)
 
             # 4. Summary & Initial Balances
             statement.total_debits_minor = FinancialNormalizer.to_minor_units(total_debits, statement.exponent)
