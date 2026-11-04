@@ -33,22 +33,7 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="hidden md:flex w-64 flex-col border-r border-slate-200/90 bg-white dark:border-navy-800 dark:bg-navy-900 justify-between select-none transition-colors">
       <div className="flex flex-col py-4">
-        {/* Brand Header */}
-        <div className="px-5 pb-4 mb-2 border-b border-slate-100 dark:border-navy-800">
-          <div className="flex items-center space-x-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy-950 border border-gold-400/40 text-gold-400 font-bold text-sm shadow-sm">
-              O
-            </div>
-            <div>
-              <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-[#F4F1E9]">OSCAR</span>
-              <p className="text-[10px] font-medium text-slate-500 dark:text-[#9BA8BA]">
-                Financial Document Intelligence
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-5 mb-2">
+        <div className="px-5 mb-2 mt-1">
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-navy-400">
             Navigation
           </span>

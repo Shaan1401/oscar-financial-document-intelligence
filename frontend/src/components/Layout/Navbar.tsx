@@ -25,16 +25,19 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/90 bg-white/95 px-6 backdrop-blur dark:border-navy-800 dark:bg-navy-900/95 transition-colors">
-      <div className="flex items-center space-x-3">
-        <Link to="/" className="flex items-center space-x-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-navy-900 border border-gold-400/40 text-gold-400 font-black tracking-wider shadow-sm group-hover:border-gold-400 transition">
+      <div className="flex items-center space-x-3 min-w-0">
+        <Link to="/" className="flex items-center space-x-3 group min-w-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-navy-900 border border-gold-400/40 text-gold-400 font-black tracking-wider shadow-sm group-hover:border-gold-400 transition">
             O
           </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-lg text-slate-900 dark:text-[#F4F1E9] tracking-tight">OSCAR</span>
+          <div className="min-w-0">
+            <div className="flex items-baseline space-x-2 flex-wrap">
+              <span className="font-extrabold text-lg text-slate-900 dark:text-[#F4F1E9] tracking-tight shrink-0">OSCAR</span>
+              <span className="hidden lg:inline text-xs font-semibold text-slate-600 dark:text-[#9BA8BA] truncate">
+                — Operational Statement Classification, Analysis & Reconciliation
+              </span>
             </div>
-            <p className="text-[10.5px] font-medium text-slate-500 dark:text-[#9BA8BA]">
+            <p className="text-[10.5px] font-medium text-slate-500 dark:text-[#9BA8BA] tracking-wide truncate">
               Financial Document Intelligence
             </p>
           </div>

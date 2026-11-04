@@ -158,17 +158,17 @@ export const FinancialAnalytics: React.FC = () => {
               <div className="flex h-full items-center justify-center text-xs text-slate-400">No merchant records identified</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={merchants.top_merchants}>
+                <ComposedChart data={merchants.top_merchants} margin={{ top: 10, right: 35, left: 15, bottom: 35 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                  <XAxis dataKey="merchant" tick={{ fontSize: 9 }} interval={0} angle={-20} textAnchor="end" height={45} />
-                  <YAxis yAxisId="left" tick={{ fontSize: 10 }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} domain={[0, 100]} unit="%" />
+                  <XAxis dataKey="merchant" tick={{ fontSize: 10, fill: '#94A3B8' }} interval={0} angle={-15} textAnchor="end" height={45} />
+                  <YAxis yAxisId="left" tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10, fill: '#94A3B8' }} domain={[0, 100]} unit="%" />
                   <Tooltip
                     formatter={(val: any, name: any) => [
                       name === 'cumulative_percentage' ? `${val}%` : `₹ ${Number(val).toLocaleString('en-IN')}`,
                       name === 'cumulative_percentage' ? 'Cumulative Share' : 'Merchant Spend',
                     ]}
-                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: 'none', color: '#fff', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #1e293b', color: '#fff', fontSize: '11px' }}
                   />
                   <Bar yAxisId="left" dataKey="amount" fill="#3B82F6" name="amount" radius={[4, 4, 0, 0]} />
                   <Line yAxisId="right" type="monotone" dataKey="cumulative_percentage" stroke="#F59E0B" strokeWidth={2.5} name="cumulative_percentage" dot={{ r: 3 }} />
@@ -198,13 +198,13 @@ export const FinancialAnalytics: React.FC = () => {
               <div className="flex h-full items-center justify-center text-xs text-slate-400">No payment channels classified</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={channels} layout="vertical">
+                <BarChart data={channels} layout="vertical" margin={{ top: 10, right: 30, left: 15, bottom: 10 }}>
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} opacity={0.3} />
-                  <XAxis type="number" tick={{ fontSize: 10 }} />
-                  <YAxis type="category" dataKey="channel" tick={{ fontSize: 10 }} width={110} />
+                  <XAxis type="number" tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                  <YAxis type="category" dataKey="channel" tick={{ fontSize: 10, fill: '#94A3B8' }} width={110} />
                   <Tooltip
                     formatter={(val: any) => [`₹ ${Number(val).toLocaleString('en-IN')}`, 'Channel Volume']}
-                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: 'none', color: '#fff', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #1e293b', color: '#fff', fontSize: '11px' }}
                   />
                   <Bar dataKey="total_amount" fill="#8B5CF6" radius={[0, 4, 4, 0]} />
                 </BarChart>
@@ -235,15 +235,15 @@ export const FinancialAnalytics: React.FC = () => {
               <div className="flex h-full items-center justify-center text-xs text-slate-400">No trend history available</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trends}>
+                <LineChart data={trends} margin={{ top: 10, right: 30, left: 15, bottom: 15 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} opacity={0.3} />
-                  <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} />
+                  <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                  <YAxis tick={{ fontSize: 10, fill: '#94A3B8' }} />
                   <Tooltip
                     formatter={(val: any, name: any) => [`₹ ${Number(val).toLocaleString('en-IN')}`, String(name)]}
-                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: 'none', color: '#fff', fontSize: '11px' }}
+                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #1e293b', color: '#fff', fontSize: '11px' }}
                   />
-                  <Legend wrapperStyle={{ fontSize: 10 }} />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 6 }} />
                   <Line type="monotone" dataKey="Food & Dining" stroke="#3B82F6" strokeWidth={2} dot={{ r: 2 }} />
                   <Line type="monotone" dataKey="Groceries" stroke="#10B981" strokeWidth={2} dot={{ r: 2 }} />
                   <Line type="monotone" dataKey="Shopping" stroke="#F59E0B" strokeWidth={2} dot={{ r: 2 }} />
@@ -381,7 +381,7 @@ export const FinancialAnalytics: React.FC = () => {
           </div>
 
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[700px]">
               <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                 <tr>
                   <th className="px-3 py-2 font-semibold">Statement File</th>

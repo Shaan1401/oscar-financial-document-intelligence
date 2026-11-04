@@ -321,12 +321,12 @@ export const Dashboard: React.FC = () => {
                 <span className="text-[10px] text-rose-600/80 dark:text-rose-400/80 font-mono">Total Verified Debits</span>
               </div>
 
-              <div className="rounded-lg bg-gold-50/70 p-3.5 dark:bg-gold-950/20 border border-gold-200/70 dark:border-gold-800/50">
-                <span className="text-[10px] font-bold text-gold-700 dark:text-gold-300 uppercase tracking-wider">= Expected Closing</span>
-                <p className="mt-1 font-mono text-base font-bold text-gold-600 dark:text-gold-400 tabular-nums">
+              <div className="rounded-lg bg-navy-900 p-3.5 border border-gold-500/40 text-gold-400 shadow-sm">
+                <span className="text-[10px] font-bold text-gold-300 uppercase tracking-wider">= Expected Closing</span>
+                <p className="mt-1 font-mono text-base font-bold text-gold-400 tabular-nums">
                   = ₹ {expectedClosing.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
-                <span className="text-[10px] text-gold-600/80 dark:text-gold-400/80 font-mono">Calculated Balance</span>
+                <span className="text-[10px] text-gold-400/80 font-mono">Calculated Balance</span>
               </div>
 
               <div className={`rounded-lg p-3.5 border ${
@@ -379,6 +379,7 @@ export const Dashboard: React.FC = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart
                       data={cashflow}
+                      margin={{ top: 10, right: 25, left: 10, bottom: 5 }}
                       onClick={(data) => {
                         if (data && data.activeLabel) {
                           navigate(`/transactions?search=${data.activeLabel}`);
@@ -435,7 +436,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={runningBalance.points}>
+                    <AreaChart data={runningBalance.points} margin={{ top: 10, right: 25, left: 10, bottom: 15 }}>
                       <defs>
                         <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#D6B36A" stopOpacity={0.4} />
@@ -748,7 +749,7 @@ export const Dashboard: React.FC = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+              <table className="w-full text-left text-xs min-w-[700px]">
                 <thead className="bg-slate-50 text-slate-500 dark:bg-navy-800/60 dark:text-[#9BA8BA] font-semibold border-b border-slate-100 dark:border-navy-800">
                   <tr>
                     <th className="px-4 py-2.5">Bank / Document</th>

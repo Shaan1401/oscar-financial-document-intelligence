@@ -113,11 +113,11 @@ export const ReviewExceptions: React.FC = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[820px]">
               <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Date & Description</th>
-                  <th className="px-4 py-3 font-semibold">Flag / Reason</th>
+                  <th className="px-4 py-3 font-semibold min-w-[200px]">Date &amp; Description</th>
+                  <th className="px-4 py-3 font-semibold min-w-[240px]">Flag / Reason</th>
                   <th className="px-4 py-3 font-semibold text-right">Amount</th>
                   <th className="px-4 py-3 font-semibold">Assigned Category</th>
                   <th className="px-4 py-3 font-semibold">Method / Score</th>
@@ -127,14 +127,14 @@ export const ReviewExceptions: React.FC = () => {
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
                 {items.map((t) => (
                   <tr key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40">
-                    <td className="px-4 py-3 max-w-[260px]">
-                      <span className="font-mono text-slate-400">{t.date}</span>
-                      <p className="truncate font-medium text-slate-900 dark:text-white mt-0.5">{t.description}</p>
+                    <td className="px-4 py-3 min-w-[200px] max-w-[300px]">
+                      <span className="font-mono text-slate-400 block text-[11px]">{t.date}</span>
+                      <p className="font-medium text-slate-900 dark:text-white mt-0.5 break-words whitespace-normal leading-snug">{t.description}</p>
                     </td>
-                    <td className="px-4 py-3 max-w-[260px]">
-                      <span className="rounded bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800">
+                    <td className="px-4 py-3 min-w-[240px] max-w-[360px]">
+                      <div className="inline-block rounded-md bg-amber-50 px-2.5 py-1 text-[11px] font-medium text-amber-800 border border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/80 leading-relaxed break-words whitespace-normal">
                         {t.validation_warnings || t.classification_reason || 'Human review flagged'}
-                      </span>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-right font-mono">
                       {t.debit > 0 ? (

@@ -34,20 +34,24 @@ def get_first_statement_id() -> str:
 
 # List of all 14 views with their target route and dark mode flag
 PAGES = [
-    ("01_dashboard.png", "/", False),
-    ("02_evidence_viewer.png", "/statements/{stmt_id}", False),
-    ("03_reconciliation.png", "/reconciliation", False),
-    ("04_reviews.png", "/reviews", False),
-    ("05_classification_insights.png", "/classification", False),
-    ("06_analytics.png", "/analytics", False),
-    ("07_transaction_explorer.png", "/transactions", False),
-    ("08_statement_history.png", "/statements", False),
-    ("09_export_centre.png", "/exports", False),
-    ("10_audit_trail.png", "/audit", False),
-    ("11_settings.png", "/settings", False),
-    ("12_dashboard_dark.png", "/", True),
-    ("13_analytics_dark.png", "/analytics", True),
-    ("14_upload.png", "/upload", False),
+    ("01_dashboard.png", "/", False, 1440, 900),
+    ("02_evidence_viewer.png", "/statements/{stmt_id}", False, 1440, 900),
+    ("03_reconciliation.png", "/reconciliation", False, 1440, 900),
+    ("04_reviews.png", "/reviews", False, 1440, 900),
+    ("05_classification_insights.png", "/classification", False, 1440, 900),
+    ("06_analytics.png", "/analytics", False, 1440, 900),
+    ("07_transaction_explorer.png", "/transactions", False, 1440, 900),
+    ("08_statement_history.png", "/statements", False, 1440, 900),
+    ("09_export_centre.png", "/exports", False, 1440, 900),
+    ("10_audit_trail.png", "/audit", False, 1440, 900),
+    ("11_settings.png", "/settings", False, 1440, 900),
+    ("12_dashboard_dark.png", "/", True, 1440, 900),
+    ("13_analytics_dark.png", "/analytics", True, 1440, 900),
+    ("14_upload.png", "/upload", False, 1440, 900),
+    ("15_dashboard_1366x768.png", "/", False, 1366, 768),
+    ("16_dashboard_768px.png", "/", False, 768, 1024),
+    ("17_reviews_1366x768.png", "/reviews", False, 1366, 768),
+    ("18_analytics_1366x768.png", "/analytics", False, 1366, 768),
 ]
 
 async def capture_genuine_screenshots():
@@ -117,11 +121,24 @@ async def capture_genuine_screenshots():
             await send_cmd("Page.navigate", {"url": "http://127.0.0.1:5173/"})
             await asyncio.sleep(3.0)
 
-            for filename, route_template, is_dark in PAGES:
+            for item in PAGES:
+                filename = item[0]
+                route_template = item[1]
+                is_dark = item[2]
+                width = item[3] if len(item) > 3 else 1440
+                height = item[4] if len(item) > 4 else 900
                 route = route_template.replace("{stmt_id}", stmt_id)
                 full_url = f"http://127.0.0.1:5173{route}"
-                print(f"\n--- Capturing {filename} ---")
+                print(f"\n--- Capturing {filename} ({width}x{height}) ---")
                 print(f"Target Route: {route} | Dark: {is_dark}")
+
+                # Set viewport size
+                await send_cmd("Emulation.setDeviceMetricsOverride", {
+                    "width": width,
+                    "height": height,
+                    "deviceScaleFactor": 1,
+                    "mobile": width < 800
+                })
 
                 # Navigate via window.location.assign or link click to force true React Router page transition
                 nav_expr = f"""
