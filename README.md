@@ -68,6 +68,7 @@ For manual startup, see [Manual Installation & Startup](#manual-installation--st
 13. [REST API Reference](#rest-api-reference)
 14. [Project Directory Layout](#project-directory-layout)
 15. [Limitations & Future Improvements](#limitations--future-improvements)
+16. [License](#license)
 
 ---
 
@@ -419,6 +420,7 @@ Open application: `http://localhost:5173`
 F:\Projects\OSCAR/
 ├── .env.example                     # Environment configuration template
 ├── .gitignore                       # Git exclusions (venv, db, caches, storage, runtime)
+├── LICENSE                          # MIT License
 ├── pytest.ini                       # Pytest configuration
 ├── README.md                        # Primary project documentation
 ├── start_oscar.bat                  # One-click Windows startup launcher
@@ -470,6 +472,17 @@ F:\Projects\OSCAR/
 4. **Future Enhancements**:
    - Integration of active learning feedback loops to auto-retrain local ML pipelines on verified reviewer corrections.
    - Streaming WebSocket ingestion for multi-hundred page annual enterprise statements.
+
+---
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+```text
+MIT License
+Copyright (c) 2026 Shaan Raval
+```
 
 ---
 
