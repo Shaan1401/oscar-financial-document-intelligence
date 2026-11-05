@@ -49,3 +49,9 @@ class NotFoundError(OscarException):
     """Raised when requested entity is not found."""
     def __init__(self, message: str = "Resource not found"):
         super().__init__(message, status_code=404)
+
+
+class TransactionStateError(OscarException):
+    """Raised when transaction cannot undergo requested state transition or is already resolved."""
+    def __init__(self, message: str = "Transaction is not in a valid state for this operation"):
+        super().__init__(message, status_code=400)

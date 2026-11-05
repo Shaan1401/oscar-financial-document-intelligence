@@ -17,6 +17,10 @@ export const ReviewExceptions: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTxn, setSelectedTxn] = useState<Transaction | null>(null);
 
+  // Approval and feedback states
+  const [approvingId, setApprovingId] = useState<number | null>(null);
+  const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
   // Modal correction form state
   const [newCategory, setNewCategory] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -30,7 +34,13 @@ export const ReviewExceptions: React.FC = () => {
     setLoading(true);
     api.getReviewQueue()
       .then((res) => setItems(res.items))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error('Failed to load review queue:', err);
+        setActionMessage({
+          type: 'error',
+          text: `Failed to load review queue: ${err.message || 'Network error'}`,
+        });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -51,11 +61,32 @@ export const ReviewExceptions: React.FC = () => {
   }, [items, search]);
 
   const handleApprove = async (id: number) => {
+    if (approvingId !== null) return; // Prevent duplicate requests
+    setApprovingId(id);
+    setActionMessage(null);
+
+    // Save snapshot of current items before optimistic mutation
+    const previousItems = items;
+
+    // Optimistically remove from current list for instant UI feedback
+    setItems((prev) => prev.filter((t) => t.id !== id));
+
     try {
-      await api.approveTransaction(id, 'Approved via Review Centre');
+      const res = await api.approveTransaction(id, 'Approved via Review Centre');
+      setActionMessage({
+        type: 'success',
+        text: res.message || `Transaction #${id} successfully approved and recorded in Audit Trail.`,
+      });
       loadQueue();
     } catch (err: any) {
-      alert(`Approval failed: ${err.message}`);
+      // Rollback optimistic removal if backend/network request failed
+      setItems(previousItems);
+      setActionMessage({
+        type: 'error',
+        text: `Approval failed: ${err.message || 'Unknown network error'}`,
+      });
+    } finally {
+      setApprovingId(null);
     }
   };
 
@@ -71,9 +102,11 @@ export const ReviewExceptions: React.FC = () => {
   const handleCorrectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTxn) return;
+    const targetId = selectedTxn.id;
     setSubmitting(true);
+    setActionMessage(null);
     try {
-      await api.correctTransaction(selectedTxn.id, {
+      const res = await api.correctTransaction(targetId, {
         new_category: newCategory,
         new_description: newDesc,
         new_debit: newDebit ? parseFloat(newDebit) : undefined,
@@ -81,9 +114,17 @@ export const ReviewExceptions: React.FC = () => {
         reason: reason || 'Human correction via Review Centre',
       });
       setSelectedTxn(null);
+      setItems((prev) => prev.filter((t) => t.id !== targetId));
+      setActionMessage({
+        type: 'success',
+        text: res.message || `Transaction #${targetId} successfully corrected and recorded in Audit Trail.`,
+      });
       loadQueue();
     } catch (err: any) {
-      alert(`Correction failed: ${err.message}`);
+      setActionMessage({
+        type: 'error',
+        text: `Correction failed: ${err.message || 'Unknown network error'}`,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -99,6 +140,35 @@ export const ReviewExceptions: React.FC = () => {
           Audit flagged transactions, resolve confidence warnings, and apply explainable human corrections.
         </p>
       </div>
+
+      {/* Action Notification Banner */}
+      {actionMessage && (
+        <div
+          role="alert"
+          className={`flex items-center justify-between rounded-xl px-4 py-3 text-xs font-medium border shadow-sm transition-all ${
+            actionMessage.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/80'
+              : 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/80'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            {actionMessage.type === 'success' ? (
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            ) : (
+              <AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400 shrink-0" />
+            )}
+            <span>{actionMessage.text}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setActionMessage(null)}
+            className="ml-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            title="Dismiss message"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {/* Queue Table */}
       <div className="rounded-xl border border-slate-200/90 bg-white shadow-sm dark:border-navy-800 dark:bg-navy-900 overflow-hidden">
@@ -203,15 +273,28 @@ export const ReviewExceptions: React.FC = () => {
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end space-x-2">
                         <button
+                          disabled={approvingId === t.id || submitting}
                           onClick={() => handleApprove(t.id)}
-                          className="inline-flex items-center space-x-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer"
+                          className="inline-flex items-center space-x-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer"
+                          title={`Approve exception for transaction #${t.id}`}
                         >
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          <span>Approve</span>
+                          {approvingId === t.id ? (
+                            <>
+                              <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                              <span>Approving...</span>
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 className="h-3.5 w-3.5" />
+                              <span>Approve</span>
+                            </>
+                          )}
                         </button>
                         <button
+                          disabled={approvingId !== null || submitting}
                           onClick={() => openCorrectModal(t)}
-                          className="inline-flex items-center space-x-1 rounded-lg bg-navy-900 hover:bg-navy-800 text-gold-400 border border-gold-500/40 px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer dark:bg-navy-800 dark:hover:bg-navy-700"
+                          className="inline-flex items-center space-x-1 rounded-lg bg-navy-900 hover:bg-navy-800 disabled:opacity-50 disabled:cursor-not-allowed text-gold-400 border border-gold-500/40 px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors cursor-pointer dark:bg-navy-800 dark:hover:bg-navy-700"
+                          title={`Correct transaction #${t.id}`}
                         >
                           <Edit3 className="h-3.5 w-3.5" />
                           <span>Correct</span>

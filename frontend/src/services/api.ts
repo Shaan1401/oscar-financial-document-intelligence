@@ -93,7 +93,7 @@ export const api = {
     return fetchJson<{ total: number; items: Transaction[] }>(`${API_BASE}/reviews${q}`);
   },
   approveTransaction: (id: number, reason?: string) =>
-    fetchJson<{ status: string; transaction_id: number; category: string }>(
+    fetchJson<{ status: string; transaction_id: number; category: string; review_status?: string; message?: string }>(
       `${API_BASE}/reviews/${id}/approve`,
       {
         method: 'POST',
@@ -105,7 +105,7 @@ export const api = {
     id: number,
     data: { new_category?: string; new_description?: string; new_debit?: number; new_credit?: number; reason?: string }
   ) =>
-    fetchJson<{ status: string; transaction_id: number; category: string }>(
+    fetchJson<{ status: string; transaction_id: number; category: string; description?: string; review_status?: string; message?: string }>(
       `${API_BASE}/reviews/${id}/correct`,
       {
         method: 'POST',

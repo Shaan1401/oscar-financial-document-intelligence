@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 
 from app.database.session import get_db
 from app.services.review_service import ReviewService
+from app.core.errors import OscarException
 
 router = APIRouter(prefix="/reviews", tags=["Human Review"])
 
@@ -32,9 +33,15 @@ def approve_transaction(
             "transaction_id": txn.id,
             "category": txn.category,
             "review_status": txn.review_status,
+            "message": f"Transaction #{txn.id} successfully approved and resolved.",
         }
+    except OscarException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to approve transaction: {str(e)}")
 
 @router.post("/{transaction_id}/correct")
 def correct_transaction(
@@ -59,7 +66,13 @@ def correct_transaction(
             "category": txn.category,
             "description": txn.description,
             "review_status": txn.review_status,
+            "message": f"Transaction #{txn.id} successfully corrected and resolved.",
         }
+    except OscarException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to correct transaction: {str(e)}")
 

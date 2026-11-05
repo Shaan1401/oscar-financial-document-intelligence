@@ -68,6 +68,7 @@ class AnalyticsService:
         ).count()
 
         anomalies_count = db.query(Transaction).filter(
+            Transaction.review_status.notin_(["APPROVED", "CORRECTED"]),
             (Transaction.is_anomaly == True) | (Transaction.is_duplicate == True)
         ).count()
 

@@ -87,13 +87,15 @@ class ReconciliationService:
                 diff = abs(current_bal - t.balance_minor)
                 if diff > 0:
                     running_bal_errors += 1
-                    t.is_anomaly = True
-                    t.validation_status = "WARNING"
-                    t.validation_warnings = (
-                        f"Running balance mismatch at row {t.row_sequence}: "
-                        f"expected {FinancialNormalizer.to_decimal(current_bal, exp)}, "
-                        f"got {FinancialNormalizer.to_decimal(t.balance_minor, exp)}"
-                    )
+                    if t.review_status not in ["APPROVED", "CORRECTED"]:
+                        t.is_anomaly = True
+                        t.review_status = "NEEDS_REVIEW"
+                        t.validation_status = "WARNING"
+                        t.validation_warnings = (
+                            f"Running balance mismatch at row {t.row_sequence}: "
+                            f"expected {FinancialNormalizer.to_decimal(current_bal, exp)}, "
+                            f"got {FinancialNormalizer.to_decimal(t.balance_minor, exp)}"
+                        )
 
         if running_bal_errors > 0:
             exceptions.append(f"Running balance inconsistent on {running_bal_errors} transaction rows")
@@ -109,10 +111,11 @@ class ReconciliationService:
             key = f"{t.date}_{t.debit_minor}_{t.credit_minor}_{t.description[:15].upper()}"
             if key in seen_keys:
                 dup_count += 1
-                t.is_duplicate = True
-                t.validation_status = "WARNING"
-                t.review_status = "NEEDS_REVIEW"
-                t.validation_warnings = f"Potential duplicate of row sequence {seen_keys[key]}"
+                if t.review_status not in ["APPROVED", "CORRECTED"]:
+                    t.is_duplicate = True
+                    t.validation_status = "WARNING"
+                    t.review_status = "NEEDS_REVIEW"
+                    t.validation_warnings = f"Potential duplicate of row sequence {seen_keys[key]}"
                 exceptions.append(f"Potential duplicate transaction at row {t.row_sequence}")
             else:
                 seen_keys[key] = t.row_sequence
@@ -120,9 +123,11 @@ class ReconciliationService:
             # Unusually large transaction (> 5x average)
             amt = t.debit_minor + t.credit_minor
             if amt > max(avg_amount * 5, 5000000):  # e.g. > 50,000 INR and 5x avg
-                t.is_anomaly = True
-                if not t.validation_warnings:
-                    t.validation_warnings = "Unusually large monetary value relative to statement average"
+                if t.review_status not in ["APPROVED", "CORRECTED"]:
+                    t.is_anomaly = True
+                    t.review_status = "NEEDS_REVIEW"
+                    if not t.validation_warnings:
+                        t.validation_warnings = "Unusually large monetary value relative to statement average"
 
         # Final Status determination
         if variance == 0 and running_bal_errors == 0:

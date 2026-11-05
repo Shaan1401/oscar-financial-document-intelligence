@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.database.models import Transaction, ReviewEvent, AuditEvent, Statement
 from app.validation.normalizer import FinancialNormalizer
+from app.core.errors import NotFoundError, TransactionStateError
 
 class ReviewService:
     """Manages human review workflows, corrections, audits, and exception approvals."""
@@ -13,10 +14,13 @@ class ReviewService:
         cls, db: Session, statement_id: Optional[str] = None, limit: int = 100, offset: int = 0
     ) -> Dict[str, Any]:
         query = db.query(Transaction).filter(
-            (Transaction.review_status == "NEEDS_REVIEW") |
-            (Transaction.is_duplicate == True) |
-            (Transaction.is_anomaly == True) |
-            (Transaction.validation_status.in_(["WARNING", "ANOMALY"]))
+            Transaction.review_status.notin_(["APPROVED", "CORRECTED"]),
+            (
+                (Transaction.review_status == "NEEDS_REVIEW") |
+                (Transaction.is_duplicate == True) |
+                (Transaction.is_anomaly == True) |
+                (Transaction.validation_status.in_(["WARNING", "ANOMALY"]))
+            )
         )
 
         if statement_id:
@@ -57,12 +61,21 @@ class ReviewService:
     def approve_transaction(cls, db: Session, transaction_id: int, reason: Optional[str] = None) -> Transaction:
         txn = db.query(Transaction).filter(Transaction.id == transaction_id).first()
         if not txn:
-            raise ValueError(f"Transaction {transaction_id} not found")
+            raise NotFoundError(f"Transaction #{transaction_id} not found")
+
+        # Guard against duplicate approval if transaction is already approved
+        if txn.review_status == "APPROVED":
+            raise TransactionStateError(
+                f"Transaction #{transaction_id} is already approved and is no longer pending review."
+            )
 
         old_status = txn.review_status
+        old_warnings = txn.validation_warnings
+
+        # Update review lifecycle and validation status to APPROVED / VALID
+        # Preserve original algorithmic detection flags (is_anomaly, is_duplicate) for forensic history
         txn.review_status = "APPROVED"
         txn.validation_status = "VALID"
-        txn.validation_warnings = None
 
         rev_event = ReviewEvent(
             transaction_id=txn.id,
@@ -73,12 +86,28 @@ class ReviewService:
         )
         db.add(rev_event)
 
+        # Build detailed audit message capturing original detection flags and human review decision
+        detection_notes = []
+        if txn.is_anomaly:
+            detection_notes.append("anomaly outlier flag")
+        if txn.is_duplicate:
+            detection_notes.append("duplicate flag")
+        if old_warnings:
+            detection_notes.append(f"warning '{old_warnings}'")
+
+        detection_summary = f" [Original detection: {', '.join(detection_notes)}]" if detection_notes else ""
+
+        audit_details = (
+            f"Transaction #{txn.id} approved by user. Previous status: '{old_status}'. "
+            f"Reason: {reason or 'Human reviewer approved exception'}.{detection_summary}"
+        )
+
         audit = AuditEvent(
             actor="USER",
             event_type="APPROVAL",
             statement_id=txn.statement_id,
             transaction_id=txn.id,
-            details=f"Transaction {txn.id} approved. Previous status: {old_status}",
+            details=audit_details,
         )
         db.add(audit)
         db.commit()
@@ -98,12 +127,13 @@ class ReviewService:
     ) -> Transaction:
         txn = db.query(Transaction).filter(Transaction.id == transaction_id).first()
         if not txn:
-            raise ValueError(f"Transaction {transaction_id} not found")
+            raise NotFoundError(f"Transaction #{transaction_id} not found")
 
         old_category = txn.category
         old_desc = txn.description
         old_debit = txn.debit_minor
         old_credit = txn.credit_minor
+        old_status = txn.review_status
 
         if new_category:
             txn.category = new_category
@@ -119,9 +149,9 @@ class ReviewService:
         if new_credit is not None:
             txn.credit_minor = FinancialNormalizer.to_minor_units(new_credit, txn.exponent)
 
+        # Update review and validation statuses while preserving historical detection flags
         txn.review_status = "CORRECTED"
         txn.validation_status = "VALID"
-        txn.validation_warnings = None
 
         # Log Review Event
         rev_event = ReviewEvent(
@@ -140,13 +170,15 @@ class ReviewService:
             statement_id=txn.statement_id,
             transaction_id=txn.id,
             details=(
-                f"Transaction {txn.id} corrected. "
+                f"Transaction #{txn.id} corrected by user. "
+                f"Previous status: '{old_status}'. "
                 f"Category: '{old_category}' -> '{txn.category}'. "
-                f"Reason: {reason or 'Manual user correction'}"
+                f"Reason: {reason or 'Manual user correction'}."
             ),
         )
         db.add(audit)
         db.commit()
         db.refresh(txn)
+        return txn
         return txn
 
