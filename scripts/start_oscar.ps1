@@ -105,11 +105,12 @@ $services = @()
 
 if (-not $backendPid) {
     Write-Host "  * Launching FastAPI Backend on port 8000..." -ForegroundColor Cyan
-    $bArgs = @("/k", "title OSCAR Backend (FastAPI :8000) & set TEMP=$RuntimeTmp & set TMP=$RuntimeTmp & .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000")
-    $bProc = Start-Process cmd.exe -ArgumentList $bArgs -WorkingDirectory $ProjectRoot -PassThru
+    $bBat = Join-Path $PSScriptRoot "run_backend.bat"
+    $bCmd = "cmd.exe /k `"$bBat`""
+    $bProc = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=$bCmd; CurrentDirectory=$ProjectRoot}
     $services += @{
         service = "backend"
-        pid = $bProc.Id
+        pid = $bProc.ProcessId
         startTime = (Get-Date).ToString("o")
         port = 8000
     }
@@ -119,11 +120,12 @@ if (-not $backendPid) {
 
 if (-not $frontendPid) {
     Write-Host "  * Launching Vite Frontend on port 5173..." -ForegroundColor Cyan
-    $fArgs = @("/k", "title OSCAR Frontend (Vite :5173) & set TEMP=$RuntimeTmp & set TMP=$RuntimeTmp & npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --cache $RuntimeNpm")
-    $fProc = Start-Process cmd.exe -ArgumentList $fArgs -WorkingDirectory $ProjectRoot -PassThru
+    $fBat = Join-Path $PSScriptRoot "run_frontend.bat"
+    $fCmd = "cmd.exe /k `"$fBat`""
+    $fProc = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{CommandLine=$fCmd; CurrentDirectory=$ProjectRoot}
     $services += @{
         service = "frontend"
-        pid = $fProc.Id
+        pid = $fProc.ProcessId
         startTime = (Get-Date).ToString("o")
         port = 5173
     }
