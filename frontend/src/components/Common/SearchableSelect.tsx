@@ -163,7 +163,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative inline-block text-left w-full sm:w-auto ${className}`}
+      className={`relative text-left min-w-0 max-w-full ${className || 'w-full'}`}
       onKeyDown={handleKeyDown}
     >
       {/* Trigger Button */}
@@ -176,14 +176,25 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
         aria-expanded={isOpen}
         aria-label={ariaLabel || placeholder}
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
-        className={`flex w-full items-center justify-between gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-900 shadow-sm transition-colors hover:border-slate-400 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-navy-700 dark:bg-navy-900 dark:text-[#F4F1E9] dark:hover:border-navy-600 dark:focus:border-gold-400 dark:focus:ring-gold-400 cursor-pointer`}
+        className={`flex w-full min-w-0 max-w-full items-center justify-between gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-sm font-medium text-slate-900 shadow-sm transition-colors hover:border-slate-400 focus:border-gold-500 focus:outline-none focus:ring-1 focus:ring-gold-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-navy-700 dark:bg-navy-900 dark:text-[#F4F1E9] dark:hover:border-navy-600 dark:focus:border-gold-400 dark:focus:ring-gold-400 cursor-pointer`}
       >
-        <span className="truncate text-left">
+        <span
+          className="truncate text-left min-w-0 flex-1 overflow-hidden"
+          title={
+            selectedOption
+              ? selectedOption.sublabel
+                ? `${selectedOption.label} — ${selectedOption.sublabel}`
+                : selectedOption.label
+              : placeholder
+          }
+        >
           {selectedOption ? (
-            <span className="flex items-center space-x-2">
-              <span className="truncate font-semibold">{selectedOption.label}</span>
+            <span className="flex items-center space-x-2 min-w-0 max-w-full">
+              <span className="truncate font-semibold min-w-0 flex-1">
+                {selectedOption.label}
+              </span>
               {selectedOption.sublabel && (
-                <span className="text-xs text-slate-500 dark:text-[#9BA8BA] hidden sm:inline">
+                <span className="text-xs text-slate-500 dark:text-[#9BA8BA] shrink-0 hidden sm:inline">
                   — {selectedOption.sublabel}
                 </span>
               )}
@@ -212,7 +223,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
             </span>
           )}
           <ChevronDown
-            className={`h-4 w-4 text-slate-500 transition-transform duration-150 dark:text-[#9BA8BA] ${
+            className={`h-4 w-4 shrink-0 text-slate-500 transition-transform duration-150 dark:text-[#9BA8BA] ${
               isOpen ? 'rotate-180 text-gold-500' : ''
             }`}
           />
@@ -221,7 +232,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
       {/* Popover Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 z-50 mt-1.5 w-full min-w-[280px] sm:min-w-[340px] max-w-lg origin-top-right rounded-xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-black/5 dark:border-navy-700 dark:bg-navy-900 dark:ring-white/10 animate-fadeIn">
+        <div className="absolute left-0 right-0 sm:left-auto sm:right-0 z-50 mt-1.5 w-full min-w-[280px] sm:min-w-[340px] max-w-full sm:max-w-lg origin-top-right rounded-xl border border-slate-200 bg-white p-2 shadow-xl ring-1 ring-black/5 dark:border-navy-700 dark:bg-navy-900 dark:ring-white/10 animate-fadeIn">
           {/* In-Dropdown Search Input */}
           <div className="relative mb-2">
             <Search className="pointer-events-none absolute left-3 top-2.5 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />

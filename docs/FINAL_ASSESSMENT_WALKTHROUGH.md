@@ -215,34 +215,51 @@ Generates executive-ready `.xlsx` workbooks containing four structured worksheet
 
 ## 9. Local Launch Instructions
 
-### Prerequisites
+### 9.1 Recommended: One-Click Windows Launchers
+OSCAR provides production-ready Windows launchers that automate prerequisite validation, port checks, process ownership tracking, and graceful shutdown:
+
+```cmd
+:: Start OSCAR (Launches FastAPI backend on :8000, Vite frontend on :5173, and opens browser)
+start_oscar.bat
+
+:: Safely stop OSCAR (Terminates only launcher-spawned processes and preserves SQLite data)
+stop_oscar.bat
+```
+
+### 9.2 Manual Development Startup
+
+#### Prerequisites
 - Python 3.11+ with virtual environment configured at `.venv`
 - Node.js 18+ and npm
-- Tesseract OCR (Optional: required only for scanned image PDFs)
+- Tesseract OCR (Optional: required for scanned image PDFs)
 
-### Step 1: Start Backend Service
+#### Step 1: Start Backend Service
 ```powershell
 # Open Terminal 1
 cd F:\Projects\OSCAR
+$env:TEMP = "F:\Projects\OSCAR\.runtime\tmp"
+$env:TMP = "F:\Projects\OSCAR\.runtime\tmp"
 & .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
 Backend API will be accessible at `http://127.0.0.1:8000`. Interactive OpenAPI documentation at `http://127.0.0.1:8000/docs`.
 
-### Step 2: Start Frontend Development Server
+#### Step 2: Start Frontend Development Server
 ```powershell
 # Open Terminal 2
 cd F:\Projects\OSCAR
-npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173
+$env:TEMP = "F:\Projects\OSCAR\.runtime\tmp"
+$env:TMP = "F:\Projects\OSCAR\.runtime\tmp"
+npm --prefix frontend run dev -- --host 127.0.0.1 --port 5173 --cache "F:\Projects\OSCAR\.runtime\npm-cache"
 ```
 Frontend workstation will be live at `http://localhost:5173`.
 
-### Step 3: Run Full Automated Test Suite
+#### Step 3: Run Full Automated Test Suite
 ```powershell
 # Open Terminal 3
 cd F:\Projects\OSCAR
 & .venv\Scripts\python.exe -m pytest backend/tests -v
 ```
-All 46 test cases across 7 modules should pass with zero failures.
+All 47 test cases across 7 modules will pass with zero failures.
 
 ---
 

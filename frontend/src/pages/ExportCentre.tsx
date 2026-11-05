@@ -51,27 +51,29 @@ export const ExportCentre: React.FC = () => {
           No bank statements available to export. Upload a statement first.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 w-full max-w-full">
           {/* Left Column: Statement Selector & Download Cards */}
-          <div className="lg:col-span-6 space-y-4">
-            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900">
+          <div className="min-w-0 w-full max-w-full space-y-4">
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 min-w-0 w-full max-w-full">
               <label className="block text-xs font-semibold text-slate-800 dark:text-slate-200 mb-2">
                 Select Statement to Export:
               </label>
-              <SearchableSelect
-                options={statements.map((s) => ({
-                  value: s.id,
-                  label: s.filename,
-                  sublabel: `${s.bank_name || 'Bank'} (${s.transaction_count ?? 0} txns)`,
-                  badge: s.reconciliation_status,
-                }))}
-                value={selectedId}
-                onChange={(val) => setSelectedId(val)}
-                placeholder="Select statement..."
-                searchPlaceholder="Search statements by name or bank..."
-                aria-label="Select Statement to Export"
-                className="w-full"
-              />
+              <div className="w-full min-w-0 max-w-full">
+                <SearchableSelect
+                  options={statements.map((s) => ({
+                    value: s.id,
+                    label: s.filename,
+                    sublabel: `${s.bank_name || 'Bank'} (${s.transaction_count ?? 0} txns)`,
+                    badge: s.reconciliation_status,
+                  }))}
+                  value={selectedId}
+                  onChange={(val) => setSelectedId(val)}
+                  placeholder="Select statement..."
+                  searchPlaceholder="Search statements by name or bank..."
+                  aria-label="Select Statement to Export"
+                  className="w-full min-w-0 max-w-full"
+                />
+              </div>
 
               {selectedStmt && (
                 <div className="mt-4 rounded-lg bg-[#FDFBF7] p-3.5 text-xs dark:bg-navy-800/60 border border-slate-200/80 dark:border-navy-700/60 space-y-2">
@@ -95,23 +97,23 @@ export const ExportCentre: React.FC = () => {
 
             {/* Download Cards */}
             {selectedStmt && (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full max-w-full">
                 <a
                   href={api.getExcelExportUrl(selectedStmt.id)}
                   download
-                  className="flex flex-col justify-between rounded-xl border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm hover:bg-emerald-100/50 dark:border-emerald-900/60 dark:bg-emerald-950/30 transition group"
+                  className="flex flex-col justify-between rounded-xl border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm hover:bg-emerald-100/50 dark:border-emerald-900/60 dark:bg-emerald-950/30 transition group min-w-0"
                 >
                   <div>
                     <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-300">
-                      <FileSpreadsheet className="h-6 w-6" />
-                      <h4 className="font-bold text-sm">Excel Workbook</h4>
+                      <FileSpreadsheet className="h-6 w-6 shrink-0" />
+                      <h4 className="font-bold text-sm truncate">Excel Workbook</h4>
                     </div>
                     <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400">
                       Formatted multi-tab .xlsx with Transactions, Category Summary, and Reconciliation Audit.
                     </p>
                   </div>
                   <div className="mt-4 flex items-center space-x-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">
-                    <Download className="h-4 w-4" />
+                    <Download className="h-4 w-4 shrink-0" />
                     <span>Download .XLSX</span>
                   </div>
                 </a>
@@ -119,19 +121,19 @@ export const ExportCentre: React.FC = () => {
                 <a
                   href={api.getCsvExportUrl(selectedStmt.id)}
                   download
-                  className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50 dark:border-navy-800 dark:bg-navy-900 dark:hover:bg-navy-800/60 transition group"
+                  className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:bg-slate-50 dark:border-navy-800 dark:bg-navy-900 dark:hover:bg-navy-800/60 transition group min-w-0"
                 >
                   <div>
                     <div className="flex items-center space-x-2 text-slate-800 dark:text-slate-200">
-                      <FileText className="h-6 w-6 text-brand-600" />
-                      <h4 className="font-bold text-sm">Standard CSV</h4>
+                      <FileText className="h-6 w-6 text-brand-600 shrink-0" />
+                      <h4 className="font-bold text-sm truncate">Standard CSV</h4>
                     </div>
                     <p className="mt-2 text-[11px] text-slate-600 dark:text-slate-400">
                       Clean UTF-8 CSV with assigned categories and formula injection protection.
                     </p>
                   </div>
                   <div className="mt-4 flex items-center space-x-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400">
-                    <Download className="h-4 w-4" />
+                    <Download className="h-4 w-4 shrink-0" />
                     <span>Download .CSV</span>
                   </div>
                 </a>
@@ -140,7 +142,7 @@ export const ExportCentre: React.FC = () => {
           </div>
 
           {/* Right Column: Workbook Structure Preview */}
-          <div className="lg:col-span-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 space-y-4">
+          <div className="min-w-0 w-full max-w-full rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-navy-800 dark:bg-navy-900 space-y-4">
             <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center space-x-2">
               <Table className="h-4 w-4 text-brand-600" />
               <span>Multi-Sheet Workbook Specifications</span>

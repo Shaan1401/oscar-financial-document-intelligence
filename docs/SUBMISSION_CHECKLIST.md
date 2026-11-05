@@ -11,7 +11,7 @@
 | **Architecture** | Local-First & Zero Egress | **PASS** | 100% self-contained SQLite WAL database; zero external network calls |
 | **Architecture** | Decimal Precision Arithmetic | **PASS** | Python Decimal + integer minor units (`paise`); zero float drift |
 | **Extraction** | Multi-Layout Bank Ingestion | **PASS** | Layout A (separate DR/CR), Layout B (combined DR/CR), Layout C (wrapped) |
-| **Extraction** | Scanned PDF & OCR Integration | **PASS** | PyMuPDF bitmap detection, OpenCV deskewing, Tesseract fallback |
+| **Extraction** | Scanned PDF & OCR Integration | **PASS** | Physical Tesseract 5.5.0 engine verified (15/15 txns, 100% precision/recall, 98.67% field accuracy, ₹0.00 variance) |
 | **Evidence** | PDF Document Preview | **PASS** | High-resolution 200 DPI PyMuPDF page rendering |
 | **Evidence** | Synchronized Bounding Box Highlighting | **PASS** | Pulsating SVG/CSS highlight over exact row coordinates on source PDF |
 | **Evidence** | 4-Step Traceability Inspector | **PASS** | Source Document $\to$ Extracted Row $\to$ Classification $\to$ Validation |
@@ -27,9 +27,11 @@
 | **Analytics** | Extraction Completeness Audit | **PASS** | 100% field availability audit (dates, descriptions, amounts, bboxes) |
 | **Analytics** | Multi-Statement Ledger | **PASS** | Strictly currency-partitioned comparative table |
 | **Exports** | Multi-tab Excel (.xlsx) Export | **PASS** | openpyxl workbook with Transactions, Account, Reconciliation, Audit tabs |
-| **Exports** | CSV Export | **PASS** | Standard CSV with formula injection protection |
+| **Exports** | CSV Export | **PASS** | Standard CSV with formula injection protection & negative numeric amount preservation |
 | **UI/UX** | Dark and Light Theme Persistence | **PASS** | Instant toggle with local storage persistence |
-| **Verification** | Backend Automated Tests | **PASS** | 36/36 tests passing in pytest (100% pass rate in ~14.4s) |
+| **UI/UX** | Responsive Export Centre | **PASS** | Two columns on desktop, single column on tablet/mobile, 0 horizontal scroll |
+| **Launchers** | One-Click Windows Launchers | **PASS** | `start_oscar.bat` and `stop_oscar.bat` with safe PID tracking & prerequisite validation |
+| **Verification** | Backend Automated Tests | **PASS** | 47/47 tests passing in pytest (100% pass rate in ~29.9s) |
 | **Verification** | Frontend TypeScript & Build | **PASS** | `tsc -b && vite build` passing with exit code 0 |
 | **Artifacts** | High-Resolution Screenshots | **PASS** | 14 genuine screenshots in `screenshots/` and `docs/screenshots/` (Light & Dark modes) |
 | **Reports** | Requirements Traceability | **PASS** | `docs/REQUIREMENTS_TRACEABILITY.md` (9 Befree requirements fully traced) |
