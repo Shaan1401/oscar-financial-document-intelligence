@@ -43,6 +43,10 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
+# Normalize relative SQLite paths to avoid working-directory drift
+if settings.DATABASE_URL in ("sqlite:///./oscar.db", "sqlite:///oscar.db", "sqlite:///./backend/oscar.db"):
+    settings.DATABASE_URL = f"sqlite:///{BASE_DIR / 'oscar.db'}"
+
 # Windows auto-detection fallback for standard Tesseract installation
 if not settings.TESSERACT_CMD and os.name == "nt":
     standard_tesseract = Path(r"C:\Program Files\Tesseract-OCR\tesseract.exe")
